@@ -9,6 +9,9 @@ An Angular Pokédex app: browse and search Pokémon, backed by [pokedex-backend]
 - Trainer accounts: sign up / sign in (Supabase Auth)
 - Trainer profile: level, XP progress, win/loss record
 - Team selection: pick exactly 3 Pokémon, persisted through the backend
+- Battle (menu option **Poked**): turn-based fight against a random opponent
+  team — screen A is the narrated battle log, screen B is the visual arena
+  with sprites, GSAP-animated HP bars and an **Atacar** button
 
 ## Tech stack
 
@@ -52,6 +55,12 @@ HTTP interceptor):
 
 - `GET /api/trainer/me` → `{ id, username, level, xp, xpToNextLevel, wins, losses, team }`
 - `PUT /api/trainer/team` with body `{ team: [name1, name2, name3] }` → updated trainer
+- `POST /api/battle/start` with body `{}` → `{ battleId, playerTeam, opponentTeam, playerActiveIndex, opponentActiveIndex, log }`
+- `POST /api/battle/:battleId/attack` with body `{}` → `{ battleId, log, playerTeam, opponentTeam, playerActiveIndex, opponentActiveIndex, status, rewards }`
+
+  where `status` is `"ongoing" | "win" | "lose"`, `rewards` is `null` while ongoing
+  or `{ xpGained, newLevel, leveledUp }` at the end, and a fighter is
+  `{ name, types, attack, defense, speed, maxHp, currentHp, sprite }`.
 
 ### Trying the flow
 
@@ -61,6 +70,10 @@ HTTP interceptor):
 4. The profile shows level, XP bar and record. Click **Elegir equipo**.
 5. Pick exactly 3 Pokémon and **Guardar equipo** — it returns to the profile.
 6. Reload the page: the session and saved team persist.
+7. Open the menu again and choose **Poked**. With a full team of 3 the battle
+   starts automatically: screen A streams the log, screen B shows both active
+   Pokémon. Press **Atacar** until the battle ends, then **Volver al menú**.
+   Without a full team, screen A shows "Primero arma tu equipo en Trainer Info".
 
 ## Status
 
@@ -71,4 +84,4 @@ API.
 ## Future improvements
 
 - Add tests
-- Battle screen
+- Multiple moves per Pokémon and switching the active fighter mid-battle
