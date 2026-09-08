@@ -88,7 +88,9 @@ export class BScreenPoked implements AfterViewInit {
     }
     this.attacking.set(true);
     this.attackError.set(null);
-    this.battleService.attack(id).subscribe({
+    // Puente temporal: la selección de movimiento + mini-juego lo agrega el
+    // commit siguiente. Por ahora usa el movimiento 0 con outcome "hit".
+    this.battleService.attack(id, 0, 'hit').subscribe({
       next: (res) => {
         this.battle.applyAttack(res);
         this.attacking.set(false);

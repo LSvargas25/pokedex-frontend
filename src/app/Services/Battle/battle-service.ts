@@ -16,6 +16,23 @@ export interface Fighter {
 
 export type BattleStatus = 'ongoing' | 'win' | 'lose';
 
+/** Resultado del mini-juego de habilidad que precede a cada ataque. */
+export type AttackOutcome = 'miss' | 'hit' | 'perfect';
+
+export interface Move {
+  name: string;
+  powerMultiplier: number;
+}
+
+export interface BattleEvent {
+  actor: 'player' | 'opponent';
+  move: string;
+  outcome: AttackOutcome;
+  damage: number;
+  isCrit: boolean;
+  targetFainted: boolean;
+}
+
 export interface BattleRewards {
   xpGained: number;
   newLevel: number;
@@ -29,11 +46,13 @@ export interface BattleStartResponse {
   playerActiveIndex: number;
   opponentActiveIndex: number;
   log: string[];
+  moves: Move[];
 }
 
 export interface BattleAttackResponse {
   battleId: string;
   log: string[];
+  events: BattleEvent[];
   playerTeam: Fighter[];
   opponentTeam: Fighter[];
   playerActiveIndex: number;
@@ -55,8 +74,16 @@ export class BattleService {
     return this.http.post<BattleStartResponse>(`${this.apiUrl}/start`, {});
   }
 
-  /** POST /api/battle/:battleId/attack — resuelve un turno. */
-  attack(battleId: string): Observable<BattleAttackResponse> {
-    return this.http.post<BattleAttackResponse>(`${this.apiUrl}/${battleId}/attack`, {});
+  /** POST /api/battle/:battleId/attack — resuelve un turno con el movimiento
+   * elegido y el resultado del mini-juego. */
+  attack(
+    battleId: string,
+    moveIndex: number,
+    outcome: AttackOutcome
+  ): Observable<BattleAttackResponse> {
+    return this.http.post<BattleAttackResponse>(`${this.apiUrl}/${battleId}/attack`, {
+      moveIndex,
+      outcome,
+    });
   }
 }
