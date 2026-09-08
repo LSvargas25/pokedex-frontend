@@ -1,1 +1,14 @@
-<p class="text">Poked Sirve en a !</p>
+<div class="poked-console">
+  <ng-container *ngIf="battle.notice() as notice; else runtime">
+    <p class="notice">{{ notice }}</p>
+  </ng-container>
+
+  <ng-template #runtime>
+    <p class="notice error" *ngIf="errorMsg() as err">{{ err }}</p>
+    <p class="notice" *ngIf="!errorMsg() && loading()">Iniciando batalla…</p>
+
+    <div #consoleBox class="log" *ngIf="!errorMsg() && !loading()">
+      <p class="line" *ngFor="let line of battle.log()">{{ line }}</p>
+    </div>
+  </ng-template>
+</div>

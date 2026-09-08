@@ -1,8 +1,55 @@
-.text{
-  text-align: center;
-  align-items: center;
-  top: 10px;
-  left: 20px;
-  position:absolute;
+.poked-console {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  padding: 10px 12px;
+  background: #0b1a0b;
+  color: #7cfc7c;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 11px;
+  line-height: 1.35;
   display: flex;
+  flex-direction: column;
+  text-shadow: 0 0 3px rgba(124, 252, 124, 0.5);
+}
+
+.notice {
+  margin: auto;
+  padding: 0 14px;
+  text-align: center;
+}
+
+.notice.error {
+  color: #ff6b6b;
+  text-shadow: 0 0 3px rgba(255, 107, 107, 0.5);
+}
+
+.log {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  scrollbar-width: thin;
+  scrollbar-color: #2f5f2f transparent;
+}
+
+.log::-webkit-scrollbar {
+  width: 6px;
+}
+
+.log::-webkit-scrollbar-thumb {
+  background: #2f5f2f;
+  border-radius: 3px;
+}
+
+.line {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.line::before {
+  content: '> ';
+  opacity: 0.55;
 }
