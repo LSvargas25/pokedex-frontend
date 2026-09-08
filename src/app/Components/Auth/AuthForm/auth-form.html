@@ -1,0 +1,43 @@
+<div class="auth">
+  <h2>{{ mode() === 'login' ? 'Iniciar sesión' : 'Crear cuenta' }}</h2>
+
+  <form (ngSubmit)="submit()">
+    <input
+      *ngIf="mode() === 'register'"
+      type="text"
+      name="username"
+      placeholder="Nombre de entrenador"
+      autocomplete="username"
+      [(ngModel)]="username"
+    />
+    <input
+      type="email"
+      name="email"
+      placeholder="Email"
+      autocomplete="email"
+      [(ngModel)]="email"
+    />
+    <input
+      type="password"
+      name="password"
+      placeholder="Contraseña"
+      [attr.autocomplete]="mode() === 'login' ? 'current-password' : 'new-password'"
+      [(ngModel)]="password"
+    />
+
+    <p class="msg error" *ngIf="errorMsg()">{{ errorMsg() }}</p>
+    <p class="msg info" *ngIf="infoMsg()">{{ infoMsg() }}</p>
+
+    <button type="submit" class="primary" [disabled]="loading()">
+      {{ loading() ? '...' : mode() === 'login' ? 'Entrar' : 'Registrarme' }}
+    </button>
+  </form>
+
+  <button type="button" class="link" (click)="toggleMode()">
+    {{
+      mode() === 'login'
+        ? '¿No tienes cuenta? Crear una'
+        : '¿Ya tienes cuenta? Iniciar sesión'
+    }}
+  </button>
+</div>
