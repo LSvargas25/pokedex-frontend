@@ -5,4 +5,9 @@
     *ngIf="view() === 'profile'"
     (chooseTeam)="view.set('team')"
   ></app-trainer-profile>
+
+  <app-team-select
+    *ngIf="view() === 'team'"
+    (done)="view.set('profile')"
+  ></app-team-select>
 </div>

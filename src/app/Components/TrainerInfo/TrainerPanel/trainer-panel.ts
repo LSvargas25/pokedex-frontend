@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, effect, signal } from '@angular/core';
 import { AuthService } from '../../../Services/Auth/auth-service';
 import { AuthForm } from '../../Auth/AuthForm/auth-form';
+import { TeamSelect } from '../TeamSelect/team-select';
 import { TrainerProfile } from '../TrainerProfile/trainer-profile';
 
 type View = 'login' | 'profile' | 'team';
@@ -14,7 +15,7 @@ type View = 'login' | 'profile' | 'team';
 @Component({
   selector: 'app-trainer-panel',
   standalone: true,
-  imports: [CommonModule, AuthForm, TrainerProfile],
+  imports: [CommonModule, AuthForm, TrainerProfile, TeamSelect],
   templateUrl: './trainer-panel.html',
   styleUrl: './trainer-panel.scss',
 })

@@ -1,0 +1,38 @@
+<div class="team-select">
+  <header>
+    <span class="title">Elige tu equipo</span>
+    <span class="count" [class.full]="canSave()">
+      {{ selected().length }} / {{ teamSize }}
+    </span>
+  </header>
+
+  <p class="state" *ngIf="loading()">Cargando pokémon…</p>
+
+  <ul class="list" *ngIf="!loading()">
+    <li
+      *ngFor="let p of pokemons()"
+      class="row"
+      [class.selected]="isSelected(p.name)"
+      [class.disabled]="isDisabled(p.name)"
+      (click)="toggle(p.name)"
+    >
+      <img *ngIf="p.image" [src]="p.image" [alt]="p.name" />
+      <span class="name">{{ p.name }}</span>
+      <span class="check" *ngIf="isSelected(p.name)">✓</span>
+    </li>
+  </ul>
+
+  <p class="msg error" *ngIf="errorMsg()">{{ errorMsg() }}</p>
+
+  <div class="actions">
+    <button type="button" class="link" (click)="cancel()">Cancelar</button>
+    <button
+      type="button"
+      class="primary"
+      [disabled]="!canSave() || saving()"
+      (click)="save()"
+    >
+      {{ saving() ? 'Guardando…' : 'Guardar equipo' }}
+    </button>
+  </div>
+</div>
