@@ -1,0 +1,11 @@
+<div class="timing">
+  <p class="hint">Frená en el centro</p>
+
+  <div class="track">
+    <div class="zone hit-zone"></div>
+    <div class="zone perfect-zone"></div>
+    <div class="marker" [style.left.%]="position()"></div>
+  </div>
+
+  <button type="button" class="now-btn" (click)="stop()">¡Ahora!</button>
+</div>
