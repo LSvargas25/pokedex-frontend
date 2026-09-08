@@ -11,7 +11,11 @@ An Angular Pokédex app: browse and search Pokémon, backed by [pokedex-backend]
 - Team selection: pick exactly 3 Pokémon, persisted through the backend
 - Battle (menu option **Poked**): turn-based fight against a random opponent
   team — screen A is the narrated battle log, screen B is the visual arena
-  with sprites, GSAP-animated HP bars and an **Atacar** button
+  with sprites and GSAP-animated HP bars
+- Each turn you pick one of **3 moves**, each gated by its own skill minigame
+  (reflex tap / timing bar / button mash) whose result — `miss` / `hit` /
+  `perfect` — scales the attack. Turn resolution plays back its events with
+  code-generated sound effects (no audio files, Web Audio API)
 
 ## Tech stack
 
@@ -55,12 +59,14 @@ HTTP interceptor):
 
 - `GET /api/trainer/me` → `{ id, username, level, xp, xpToNextLevel, wins, losses, team }`
 - `PUT /api/trainer/team` with body `{ team: [name1, name2, name3] }` → updated trainer
-- `POST /api/battle/start` with body `{}` → `{ battleId, playerTeam, opponentTeam, playerActiveIndex, opponentActiveIndex, log }`
-- `POST /api/battle/:battleId/attack` with body `{}` → `{ battleId, log, playerTeam, opponentTeam, playerActiveIndex, opponentActiveIndex, status, rewards }`
+- `POST /api/battle/start` with body `{}` → `{ battleId, playerTeam, opponentTeam, playerActiveIndex, opponentActiveIndex, log, moves }`
+- `POST /api/battle/:battleId/attack` with body `{ moveIndex: 0|1|2, outcome: "miss"|"hit"|"perfect" }` → `{ battleId, log, events, playerTeam, opponentTeam, playerActiveIndex, opponentActiveIndex, status, rewards }`
 
   where `status` is `"ongoing" | "win" | "lose"`, `rewards` is `null` while ongoing
-  or `{ xpGained, newLevel, leveledUp }` at the end, and a fighter is
-  `{ name, types, attack, defense, speed, maxHp, currentHp, sprite }`.
+  or `{ xpGained, newLevel, leveledUp }` at the end, a fighter is
+  `{ name, types, attack, defense, speed, maxHp, currentHp, sprite }`,
+  `moves` is 3 entries of `{ name, powerMultiplier }`, and each event is
+  `{ actor: "player"|"opponent", move, outcome, damage, isCrit, targetFainted }`.
 
 ### Trying the flow
 
@@ -72,8 +78,10 @@ HTTP interceptor):
 6. Reload the page: the session and saved team persist.
 7. Open the menu again and choose **Poked**. With a full team of 3 the battle
    starts automatically: screen A streams the log, screen B shows both active
-   Pokémon. Press **Atacar** until the battle ends, then **Volver al menú**.
-   Without a full team, screen A shows "Primero arma tu equipo en Trainer Info".
+   Pokémon and 3 move buttons. Pick a move, play its minigame, and watch the
+   turn resolve with sound. Repeat until the battle ends, then **Volver al
+   menú**. Without a full team, screen A shows "Primero arma tu equipo en
+   Trainer Info".
 
 ## Status
 
@@ -84,4 +92,4 @@ API.
 ## Future improvements
 
 - Add tests
-- Multiple moves per Pokémon and switching the active fighter mid-battle
+- Per-species movesets and manual switching of the active fighter
