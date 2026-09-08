@@ -6,7 +6,7 @@ import { ScreenService } from '../../../Services/Pokedex/On-OFF Service/screen-s
 import { PokedService } from '../../../Services/Screens/poked-screen-state';
 import { AscreenPoked } from '../../Options/Poked/AScreen/ascreen-poked/ascreen-poked';
 import { AScreenPokemonSearch } from '../../Options/PokemonSearch/AScreenPokemonSearch/ascreen-pokemon-search/ascreen-pokemon-search';
-import { ScreenTrainerInfo } from '../../Options/TrainerInfo/AScreenTrainer/screen-trainer-info/screen-trainer-info';
+import { TrainerPanel } from '../../TrainerInfo/TrainerPanel/trainer-panel';
 import { Settings } from '../../Options/Settings/Settings/settings';
 import { PokemonSelected } from '../../../Services/Options/SearchPokemon/PokemonSelected/pokemon-selected';
 import { Subject } from 'rxjs';
@@ -204,7 +204,7 @@ export class AScreen implements AfterViewInit, OnDestroy {
         this.currentComponent = AScreenPokemonSearch;
         break;
       case 'Trainer Info':
-        this.currentComponent = ScreenTrainerInfo;
+        this.currentComponent = TrainerPanel;
         break;
       case 'Settings':
         this.currentComponent = Settings;
@@ -247,7 +247,7 @@ export class AScreen implements AfterViewInit, OnDestroy {
         this.pokedService.setScreens('Pokémon Search', 'BScreenPokemonSearch');
         break;
       case 'Trainer Info':
-        this.currentComponent = ScreenTrainerInfo;
+        this.currentComponent = TrainerPanel;
         this.pokedService.setScreens('Trainer Info', 'BScreenTrainer');
         break;
       case 'Settings':

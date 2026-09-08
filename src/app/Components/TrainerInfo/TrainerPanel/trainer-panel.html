@@ -1,0 +1,8 @@
+<div class="trainer-panel">
+  <app-auth-form *ngIf="view() === 'login'"></app-auth-form>
+
+  <app-trainer-profile
+    *ngIf="view() === 'profile'"
+    (chooseTeam)="view.set('team')"
+  ></app-trainer-profile>
+</div>

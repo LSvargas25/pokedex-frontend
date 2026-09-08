@@ -1,0 +1,31 @@
+<div class="profile">
+  <ng-container *ngIf="!loading(); else loadingTpl">
+    <ng-container *ngIf="trainer() as t; else errorTpl">
+      <h2>{{ t.username }}</h2>
+      <p class="level">Nivel {{ t.level }}</p>
+
+      <div class="xp-bar" [attr.aria-label]="'Progreso de experiencia'">
+        <div class="xp-fill" [style.width.%]="xpPercent()"></div>
+      </div>
+      <p class="xp-text">{{ t.xp }} / {{ t.xpToNextLevel }} XP</p>
+
+      <p class="record">
+        <span class="wins">{{ t.wins }}V</span>
+        <span class="sep">·</span>
+        <span class="losses">{{ t.losses }}D</span>
+      </p>
+
+      <button type="button" class="primary" (click)="chooseTeam.emit()">
+        Elegir equipo
+      </button>
+      <button type="button" class="link" (click)="signOut()">Cerrar sesión</button>
+    </ng-container>
+  </ng-container>
+</div>
+
+<ng-template #loadingTpl>
+  <p class="state">Cargando perfil…</p>
+</ng-template>
+<ng-template #errorTpl>
+  <p class="state error">{{ errorMsg() }}</p>
+</ng-template>
