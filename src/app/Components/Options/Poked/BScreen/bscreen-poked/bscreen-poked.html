@@ -9,7 +9,7 @@
           <div #opponentHp class="hp-fill" [style.background]="hpColor(hpPct(o))"></div>
         </div>
       </div>
-      <img class="sprite" [src]="o.sprite" [alt]="o.name" />
+      <img #opponentSprite class="sprite" [src]="o.sprite" [alt]="o.name" />
     </div>
   </div>
 
@@ -18,7 +18,7 @@
   <!-- Jugador -->
   <div class="fighter player" *ngIf="battle.playerActive() as p">
     <div class="row">
-      <img class="sprite" [src]="p.sprite" [alt]="p.name" />
+      <img #playerSprite class="sprite" [src]="p.sprite" [alt]="p.name" />
       <div class="meta">
         <span class="name">{{ p.name }}</span>
         <span class="hp-num">{{ p.currentHp }} / {{ p.maxHp }}</span>
@@ -32,9 +32,35 @@
   <!-- Controles / resultado -->
   <div class="controls">
     <ng-container *ngIf="!battle.isOver(); else result">
-      <button class="attack" (click)="onAttack()" [disabled]="attacking()">
-        {{ attacking() ? '...' : 'Atacar' }}
-      </button>
+      <ng-container *ngIf="phase() === 'minigame'; else moves">
+        <app-reflex-minigame
+          *ngIf="selectedMoveIndex() === 0"
+          (outcome)="onMinigameOutcome($event)"
+        ></app-reflex-minigame>
+        <app-timing-bar-minigame
+          *ngIf="selectedMoveIndex() === 1"
+          (outcome)="onMinigameOutcome($event)"
+        ></app-timing-bar-minigame>
+        <app-mash-minigame
+          *ngIf="selectedMoveIndex() === 2"
+          (outcome)="onMinigameOutcome($event)"
+        ></app-mash-minigame>
+      </ng-container>
+
+      <ng-template #moves>
+        <div class="moves">
+          <button
+            *ngFor="let m of moveList(); let i = index"
+            type="button"
+            class="move"
+            [disabled]="busy()"
+            (click)="selectMove(i)"
+          >
+            {{ m.name }}
+          </button>
+        </div>
+      </ng-template>
+
       <p class="err" *ngIf="attackError()">{{ attackError() }}</p>
     </ng-container>
 
