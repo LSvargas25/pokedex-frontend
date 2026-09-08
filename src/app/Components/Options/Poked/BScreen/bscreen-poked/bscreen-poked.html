@@ -1,1 +1,61 @@
-<p class="text">Poked Sirve en b !</p>
+<div class="arena" *ngIf="battle.battleId(); else waiting">
+  <!-- Rival -->
+  <div class="fighter opponent" *ngIf="battle.opponentActive() as o">
+    <div class="row">
+      <div class="meta">
+        <span class="name">{{ o.name }}</span>
+        <span class="hp-num">{{ o.currentHp }} / {{ o.maxHp }}</span>
+        <div class="hp-track">
+          <div #opponentHp class="hp-fill" [style.background]="hpColor(hpPct(o))"></div>
+        </div>
+      </div>
+      <img class="sprite" [src]="o.sprite" [alt]="o.name" />
+    </div>
+  </div>
+
+  <div class="vs">VS</div>
+
+  <!-- Jugador -->
+  <div class="fighter player" *ngIf="battle.playerActive() as p">
+    <div class="row">
+      <img class="sprite" [src]="p.sprite" [alt]="p.name" />
+      <div class="meta">
+        <span class="name">{{ p.name }}</span>
+        <span class="hp-num">{{ p.currentHp }} / {{ p.maxHp }}</span>
+        <div class="hp-track">
+          <div #playerHp class="hp-fill" [style.background]="hpColor(hpPct(p))"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Controles / resultado -->
+  <div class="controls">
+    <ng-container *ngIf="!battle.isOver(); else result">
+      <button class="attack" (click)="onAttack()" [disabled]="attacking()">
+        {{ attacking() ? '...' : 'Atacar' }}
+      </button>
+      <p class="err" *ngIf="attackError()">{{ attackError() }}</p>
+    </ng-container>
+
+    <ng-template #result>
+      <p
+        class="outcome"
+        [class.win]="battle.status() === 'win'"
+        [class.lose]="battle.status() === 'lose'"
+      >
+        {{ battle.status() === 'win' ? '¡Ganaste!' : 'Perdiste' }}
+      </p>
+      <p class="rewards" *ngIf="battle.rewards() as r">
+        +{{ r.xpGained }} XP<span class="levelup" *ngIf="r.leveledUp">
+          · ¡Subiste a nivel {{ r.newLevel }}!</span
+        >
+      </p>
+      <button class="menu" (click)="backToMenu()">Volver al menú</button>
+    </ng-template>
+  </div>
+</div>
+
+<ng-template #waiting>
+  <p class="waiting">{{ battle.notice() || 'Preparando combate…' }}</p>
+</ng-template>
