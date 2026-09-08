@@ -1,0 +1,11 @@
+<div class="mash">
+  <p class="hint">¡Machacá! {{ round(charge()) }}%</p>
+
+  <div class="track">
+    <div class="fill" [style.width.%]="barWidth()"></div>
+    <div class="tick hit-tick"></div>
+    <div class="tick perfect-tick"></div>
+  </div>
+
+  <button type="button" class="mash-btn" (click)="mash()">¡Carga!</button>
+</div>

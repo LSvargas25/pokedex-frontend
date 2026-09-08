@@ -1,0 +1,67 @@
+.mash {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 8px 10px;
+  border: 2px solid #000;
+  border-radius: 8px;
+  background: #0b1a0b;
+  font-family: 'Courier New', Courier, monospace;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.hint {
+  margin: 0;
+  text-align: center;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: #7cfc7c;
+  text-shadow: 0 0 3px rgba(124, 252, 124, 0.5);
+}
+
+.track {
+  position: relative;
+  width: 100%;
+  height: 20px;
+  border: 2px solid #000;
+  border-radius: 5px;
+  background: #1c2f1c;
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  background: linear-gradient(90deg, #7ac74c, #f7d02c);
+  transition: width 0.06s linear;
+}
+
+.tick {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.hit-tick {
+  left: 70%;
+}
+
+.perfect-tick {
+  right: 2px;
+}
+
+.mash-btn {
+  width: 100%;
+  height: 32px;
+  border: 2px solid #000;
+  border-radius: 7px;
+  background: #de092f;
+  color: #fff;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
