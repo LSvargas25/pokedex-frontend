@@ -1,0 +1,53 @@
+.reflex {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  height: 120px;
+  border: 2px solid #000;
+  border-radius: 8px;
+  background: #0b1a0b;
+  overflow: hidden;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.hint {
+  position: absolute;
+  top: 6px;
+  left: 0;
+  right: 0;
+  margin: 0;
+  text-align: center;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: #7cfc7c;
+  text-shadow: 0 0 3px rgba(124, 252, 124, 0.5);
+  pointer-events: none;
+}
+
+.target {
+  position: absolute;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 0 6px rgba(255, 203, 5, 0.9));
+  animation: pop 0.12s ease-out;
+}
+
+.target img {
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+}
+
+@keyframes pop {
+  from {
+    transform: translate(-50%, -50%) scale(0.4);
+  }
+  to {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}

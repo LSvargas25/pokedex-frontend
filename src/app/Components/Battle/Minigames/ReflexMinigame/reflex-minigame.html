@@ -1,0 +1,15 @@
+<div class="reflex">
+  <p class="hint">{{ visible() ? '¡YA!' : 'Prepará el dedo…' }}</p>
+
+  <button
+    *ngIf="visible()"
+    type="button"
+    class="target"
+    [style.top.%]="position().top"
+    [style.left.%]="position().left"
+    (click)="hit()"
+    aria-label="Golpear"
+  >
+    <img src="assets/images/pokeball.ico" alt="" />
+  </button>
+</div>
