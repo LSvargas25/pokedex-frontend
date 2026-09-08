@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 interface PokedScreenState {
   aScreenContent: string | null;
@@ -18,6 +18,10 @@ export class PokedService {
 
   // Observable público
   state$ = this.state.asObservable();
+
+  // Emite cuando otra pantalla (ej. la B durante la batalla) pide volver al menú principal.
+  private menuSubject = new Subject<void>();
+  menu$ = this.menuSubject.asObservable();
 
   // Cambiar contenido de ambas pantallas
   setScreens(aScreenContent: string | null, bScreenContent: string | null) {
@@ -38,5 +42,10 @@ export class PokedService {
   // Resetear ambas pantallas
   reset() {
     this.state.next({ aScreenContent: null, bScreenContent: null });
+  }
+
+  // Pedir volver al menú principal (lo maneja AScreen con su goBack()).
+  goToMenu() {
+    this.menuSubject.next();
   }
 }

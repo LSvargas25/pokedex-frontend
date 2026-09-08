@@ -60,6 +60,11 @@ export class AScreen implements AfterViewInit, OnDestroy {
         if (data.aScreenContent) this.loadAScreenContent(data.aScreenContent);
         else this.clearAScreenContent();
       });
+
+    // Volver al menú cuando lo pide otra pantalla (ej. la B al terminar una batalla).
+    this.pokedService.menu$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => this.goBack());
   }
 
   ngAfterViewInit() {
