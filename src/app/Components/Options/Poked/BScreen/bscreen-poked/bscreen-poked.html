@@ -77,6 +77,9 @@
           · ¡Subiste a nivel {{ r.newLevel }}!</span
         >
       </p>
+      <div class="unlock-toast" *ngFor="let name of battle.rewards()?.unlockedPokemon">
+        ¡Desbloqueaste a <span class="name">{{ name }}</span>!
+      </div>
       <button class="menu" (click)="backToMenu()">Volver al menú</button>
     </ng-template>
   </div>

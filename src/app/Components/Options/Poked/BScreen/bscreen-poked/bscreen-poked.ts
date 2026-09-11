@@ -179,6 +179,9 @@ export class BScreenPoked implements AfterViewInit {
     if (this.battle.isOver()) {
       if (this.battle.status() === 'win') {
         this.sound.playVictory();
+        if (res.rewards?.unlockedPokemon?.length) {
+          setTimeout(() => this.sound.playUnlock(), 500);
+        }
       } else {
         this.sound.playDefeat();
       }

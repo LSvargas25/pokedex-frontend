@@ -37,6 +37,7 @@ export interface BattleRewards {
   xpGained: number;
   newLevel: number;
   leveledUp: boolean;
+  unlockedPokemon?: string[];
 }
 
 export interface BattleStartResponse {

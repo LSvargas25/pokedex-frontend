@@ -109,4 +109,10 @@ export class SoundService {
   playDefeat(): void {
     this.arpeggio([523, 415, 330, 247], 0.14);
   }
+
+  /** Nuevo pokémon desbloqueado: campanita corta de dos notas. */
+  playUnlock(): void {
+    this.tone({ freq: 784, duration: 0.09, type: 'triangle', gain: 0.15 });
+    this.tone({ freq: 1175, start: 0.09, duration: 0.16, type: 'triangle', gain: 0.15 });
+  }
 }
