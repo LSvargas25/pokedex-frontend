@@ -13,9 +13,9 @@ An Angular Pokédex app: browse and search Pokémon, backed by [pokedex-backend]
   team — screen A is the narrated battle log, screen B is the visual arena
   with sprites and GSAP-animated HP bars
 - Each turn you pick one of **3 moves**, each gated by its own skill minigame
-  (reflex tap / timing bar / button mash) whose result — `miss` / `hit` /
-  `perfect` — scales the attack. Turn resolution plays back its events with
-  code-generated sound effects (no audio files, Web Audio API)
+  (reaction semaphore / timing bar / keyboard letters) whose result — `miss` /
+  `hit` / `perfect` — scales the attack. Turn resolution plays back its events
+  with code-generated sound effects (no audio files, Web Audio API)
 
 ## Tech stack
 

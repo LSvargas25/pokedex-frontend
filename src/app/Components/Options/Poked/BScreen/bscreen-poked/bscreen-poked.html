@@ -33,18 +33,18 @@
   <div class="controls">
     <ng-container *ngIf="!battle.isOver(); else result">
       <ng-container *ngIf="phase() === 'minigame'; else moves">
-        <app-reflex-minigame
+        <app-semaphore-minigame
           *ngIf="selectedMoveIndex() === 0"
           (outcome)="onMinigameOutcome($event)"
-        ></app-reflex-minigame>
+        ></app-semaphore-minigame>
         <app-timing-bar-minigame
           *ngIf="selectedMoveIndex() === 1"
           (outcome)="onMinigameOutcome($event)"
         ></app-timing-bar-minigame>
-        <app-mash-minigame
+        <app-keyboard-letters-minigame
           *ngIf="selectedMoveIndex() === 2"
           (outcome)="onMinigameOutcome($event)"
-        ></app-mash-minigame>
+        ></app-keyboard-letters-minigame>
       </ng-container>
 
       <ng-template #moves>

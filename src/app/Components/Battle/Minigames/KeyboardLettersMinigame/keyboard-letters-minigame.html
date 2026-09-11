@@ -1,0 +1,9 @@
+<div class="letters">
+  <p class="hint">¡Pulsá la letra en tu teclado!</p>
+
+  <div class="key">{{ letter() }}</div>
+
+  <div class="pips">
+    <span class="pip" *ngFor="let _ of pips; let i = index" [class.on]="i < hits()"></span>
+  </div>
+</div>

@@ -19,8 +19,8 @@ import {
 import { BattleStateService } from '../../../../../Services/Battle/battle-state';
 import { PokedService } from '../../../../../Services/Screens/poked-screen-state';
 import { SoundService } from '../../../../../Services/Sound/sound-service';
-import { MashMinigame } from '../../../../Battle/Minigames/MashMinigame/mash-minigame';
-import { ReflexMinigame } from '../../../../Battle/Minigames/ReflexMinigame/reflex-minigame';
+import { KeyboardLettersMinigame } from '../../../../Battle/Minigames/KeyboardLettersMinigame/keyboard-letters-minigame';
+import { SemaphoreMinigame } from '../../../../Battle/Minigames/SemaphoreMinigame/semaphore-minigame';
 import { TimingBarMinigame } from '../../../../Battle/Minigames/TimingBarMinigame/timing-bar-minigame';
 
 type Phase = 'choosing' | 'minigame' | 'resolving' | 'sequence';
@@ -34,7 +34,7 @@ const DEFAULT_MOVES: Move[] = [
 @Component({
   selector: 'app-bscreen-poked',
   standalone: true,
-  imports: [CommonModule, ReflexMinigame, TimingBarMinigame, MashMinigame],
+  imports: [CommonModule, SemaphoreMinigame, TimingBarMinigame, KeyboardLettersMinigame],
   templateUrl: './bscreen-poked.html',
   styleUrl: './bscreen-poked.scss',
 })

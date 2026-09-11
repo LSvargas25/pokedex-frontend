@@ -1,0 +1,9 @@
+<div class="semaphore" [class.is-go]="go()">
+  <p class="hint">{{ go() ? '¡YA!' : 'Prepárate…' }}</p>
+
+  <div class="light" [class.red]="!go()" [class.green]="go()"></div>
+
+  <button type="button" class="react-btn" (click)="react()">
+    {{ go() ? '¡Golpear!' : 'Esperá…' }}
+  </button>
+</div>

@@ -1,0 +1,56 @@
+.letters {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #000;
+  border-radius: 8px;
+  background: #0b1a0b;
+  font-family: 'Courier New', Courier, monospace;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.hint {
+  margin: 0;
+  text-align: center;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: #7cfc7c;
+  text-shadow: 0 0 3px rgba(124, 252, 124, 0.5);
+}
+
+.key {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #000;
+  border-radius: 8px;
+  background: #1c2f1c;
+  color: #fff;
+  font-size: 38px;
+  font-weight: 700;
+  line-height: 1;
+  text-shadow: 0 0 8px rgba(124, 252, 124, 0.7);
+}
+
+.pips {
+  display: flex;
+  gap: 6px;
+}
+
+.pip {
+  width: 12px;
+  height: 12px;
+  border: 2px solid #000;
+  border-radius: 50%;
+  background: #1c2f1c;
+}
+
+.pip.on {
+  background: #4cd137;
+  box-shadow: 0 0 6px rgba(76, 209, 55, 0.8);
+}

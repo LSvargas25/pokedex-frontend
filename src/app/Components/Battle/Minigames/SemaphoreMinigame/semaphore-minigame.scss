@@ -1,4 +1,4 @@
-.mash {
+.semaphore {
   box-sizing: border-box;
   width: 100%;
   padding: 8px 10px;
@@ -8,6 +8,7 @@
   font-family: 'Courier New', Courier, monospace;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 8px;
 }
 
@@ -20,39 +21,27 @@
   text-shadow: 0 0 3px rgba(124, 252, 124, 0.5);
 }
 
-.track {
-  position: relative;
-  width: 100%;
-  height: 20px;
+.light {
+  width: 46px;
+  height: 46px;
   border: 2px solid #000;
-  border-radius: 5px;
-  background: #1c2f1c;
-  overflow: hidden;
+  border-radius: 50%;
+  transition:
+    background 0.05s linear,
+    box-shadow 0.05s linear;
 }
 
-.fill {
-  height: 100%;
-  background: linear-gradient(90deg, #7ac74c, #f7d02c);
-  transition: width 0.06s linear;
+.light.red {
+  background: #e0392f;
+  box-shadow: 0 0 10px rgba(224, 57, 47, 0.8);
 }
 
-.tick {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: rgba(255, 255, 255, 0.8);
+.light.green {
+  background: #4cd137;
+  box-shadow: 0 0 14px rgba(76, 209, 55, 0.9);
 }
 
-.hit-tick {
-  left: 70%;
-}
-
-.perfect-tick {
-  right: 2px;
-}
-
-.mash-btn {
+.react-btn {
   width: 100%;
   height: 32px;
   border: 2px solid #000;
