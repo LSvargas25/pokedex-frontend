@@ -15,6 +15,11 @@
         <span class="losses">{{ t.losses }}D</span>
       </p>
 
+      <p class="next-unlock" *ngIf="t.nextUnlock as n">
+        Próximo desbloqueo en nivel {{ n.level }}:
+        <span class="names">{{ n.pokemonNames.join(', ') }}</span>
+      </p>
+
       <button type="button" class="primary" (click)="chooseTeam.emit()">
         Elegir equipo
       </button>

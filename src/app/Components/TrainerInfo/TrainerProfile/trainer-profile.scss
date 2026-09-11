@@ -65,6 +65,16 @@ h2 {
   color: #666;
 }
 
+.next-unlock {
+  margin: 0 0 4px;
+  font-size: 10px;
+  color: #6b6b6b;
+}
+
+.next-unlock .names {
+  text-transform: capitalize;
+}
+
 button {
   font-family: inherit;
   cursor: pointer;
