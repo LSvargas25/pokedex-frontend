@@ -89,6 +89,19 @@ header {
   cursor: not-allowed;
 }
 
+.row.locked {
+  opacity: 0.45;
+  cursor: not-allowed;
+  background: #eee;
+}
+
+.row .lock {
+  font-size: 10px;
+  font-weight: 700;
+  color: #6b6b6b;
+  white-space: nowrap;
+}
+
 .msg {
   margin: 0;
   font-size: 11px;

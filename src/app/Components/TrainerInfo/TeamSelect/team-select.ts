@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, OnInit, Output, computed, signal } from '@angular/core';
 import {
-  Pokemon,
   PokemonService,
+  RosterEntry,
 } from '../../../Services/Pokemons/PokemonService/pokemon-service';
 import { TrainerService } from '../../../Services/Trainer/trainer-service';
 
@@ -21,7 +21,8 @@ export class TeamSelect implements OnInit {
 
   readonly teamSize = TEAM_SIZE;
 
-  readonly pokemons = signal<Pokemon[]>([]);
+  readonly pokemons = signal<RosterEntry[]>([]);
+  readonly unlockedNames = signal<Set<string>>(new Set());
   readonly selected = signal<string[]>([]);
   readonly loading = signal(true);
   readonly saving = signal(false);
@@ -35,15 +36,18 @@ export class TeamSelect implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Prellenar con el equipo actual, si lo hay.
+    // Prellenar con el equipo actual y saber qué está desbloqueado.
     this.trainerService.getMe().subscribe({
-      next: (t) => this.selected.set((t.team ?? []).slice(0, TEAM_SIZE)),
+      next: (t) => {
+        this.selected.set((t.team ?? []).slice(0, TEAM_SIZE));
+        this.unlockedNames.set(new Set((t.unlockedPokemon ?? []).map((n) => n.toLowerCase())));
+      },
       error: () => {
         /* sin prefill si falla; no es bloqueante */
       },
     });
 
-    this.pokemonService.getPokemonsFiltered(200, 0, {}).subscribe({
+    this.pokemonService.getRoster().subscribe({
       next: (list) => {
         this.pokemons.set(list ?? []);
         this.loading.set(false);
@@ -55,15 +59,24 @@ export class TeamSelect implements OnInit {
     });
   }
 
+  isUnlocked(name: string): boolean {
+    return this.unlockedNames().has(name.toLowerCase());
+  }
+
   isSelected(name: string): boolean {
     return this.selected().includes(name);
   }
 
   isDisabled(name: string): boolean {
-    return !this.isSelected(name) && this.selected().length >= TEAM_SIZE;
+    return (
+      !this.isUnlocked(name) || (!this.isSelected(name) && this.selected().length >= TEAM_SIZE)
+    );
   }
 
   toggle(name: string): void {
+    if (!this.isUnlocked(name)) {
+      return;
+    }
     const current = this.selected();
     if (current.includes(name)) {
       this.selected.set(current.filter((n) => n !== name));

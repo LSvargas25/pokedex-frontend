@@ -14,10 +14,14 @@
       class="row"
       [class.selected]="isSelected(p.name)"
       [class.disabled]="isDisabled(p.name)"
+      [class.locked]="!isUnlocked(p.name)"
       (click)="toggle(p.name)"
     >
-      <img *ngIf="p.image" [src]="p.image" [alt]="p.name" />
+      <img *ngIf="p.sprite" [src]="p.sprite" [alt]="p.name" />
       <span class="name">{{ p.name }}</span>
+      <span class="lock" *ngIf="!isUnlocked(p.name)">
+        🔒 Nivel {{ p.unlockLevel }} requerido
+      </span>
       <span class="check" *ngIf="isSelected(p.name)">✓</span>
     </li>
   </ul>
