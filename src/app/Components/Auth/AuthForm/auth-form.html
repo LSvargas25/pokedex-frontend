@@ -40,4 +40,15 @@
         : '¿Ya tienes cuenta? Iniciar sesión'
     }}
   </button>
+
+  <div class="divider"><span>o</span></div>
+
+  <button
+    type="button"
+    class="google"
+    [disabled]="loading()"
+    (click)="continueWithGoogle()"
+  >
+    <span class="g-icon">G</span> Continuar con Google
+  </button>
 </div>

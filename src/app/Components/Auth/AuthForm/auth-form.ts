@@ -30,6 +30,27 @@ export class AuthForm {
     this.infoMsg.set(null);
   }
 
+  async continueWithGoogle(): Promise<void> {
+    if (this.loading()) {
+      return;
+    }
+    this.errorMsg.set(null);
+    this.infoMsg.set(null);
+    this.loading.set(true);
+    try {
+      // Redirige fuera de la app; si esto resuelve con error, mostralo.
+      // Si funciona, el navegador ya está navegando a Google.
+      const { error } = await this.auth.signInWithGoogle();
+      if (error) {
+        this.errorMsg.set(error.message);
+        this.loading.set(false);
+      }
+    } catch (e) {
+      this.errorMsg.set(e instanceof Error ? e.message : 'Error inesperado.');
+      this.loading.set(false);
+    }
+  }
+
   async submit(): Promise<void> {
     if (this.loading()) {
       return;

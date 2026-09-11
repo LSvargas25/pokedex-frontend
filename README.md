@@ -6,7 +6,10 @@ An Angular Pokédex app: browse and search Pokémon, backed by [pokedex-backend]
 
 - Browse and search Pokémon
 - Pokémon detail view
-- Trainer accounts: sign up / sign in (Supabase Auth)
+- Trainer accounts: sign up / sign in with email+password, or "Continuar con
+  Google" (Supabase Auth's native Google OAuth provider). An already-active
+  session is picked up automatically on load, so returning to Trainer Info
+  after login (or after the Google redirect) goes straight to the profile
 - Trainer profile: level, XP progress, win/loss record
 - Team selection: pick exactly 3 Pokémon, persisted through the backend.
   Pokémon above the trainer's current level tier show locked (with the level
@@ -36,6 +39,13 @@ builds):
 | `supabaseUrl`     | Supabase project URL                                     | `https://xxxx.supabase.co`              |
 | `supabaseAnonKey` | Supabase anon / publishable key (safe to ship publicly) | `sb_publishable_...`                     |
 | `apiBaseUrl`      | Base URL of `pokedex-backend`                            | `http://localhost:3000`                  |
+
+Google sign-in needs no extra frontend config beyond the values above — it
+rides the same Supabase project. It does need the **Google provider enabled**
+in the Supabase dashboard (Authentication → Providers → Google, with a
+Google Cloud OAuth client id/secret and the Supabase callback URL registered
+on the Google side). Until that provider is turned on, the "Continuar con
+Google" button will redirect to Google but the callback will fail.
 
 The committed values point at the shared Supabase project and a local backend.
 The anon key is public by design — row-level security on Supabase protects the

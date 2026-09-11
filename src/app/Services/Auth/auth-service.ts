@@ -44,6 +44,14 @@ export class AuthService {
     return supabase.auth.signInWithPassword({ email, password });
   }
 
+  /** Login con Google vía el proveedor OAuth de Supabase; redirige fuera de la app. */
+  signInWithGoogle() {
+    return supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: window.location.origin },
+    });
+  }
+
   signOut() {
     return supabase.auth.signOut();
   }
