@@ -8,7 +8,10 @@ An Angular Pokédex app: browse and search Pokémon, backed by [pokedex-backend]
 - Pokémon detail view
 - Trainer accounts: sign up / sign in (Supabase Auth)
 - Trainer profile: level, XP progress, win/loss record
-- Team selection: pick exactly 3 Pokémon, persisted through the backend
+- Team selection: pick exactly 3 Pokémon, persisted through the backend.
+  Pokémon above the trainer's current level tier show locked (with the level
+  required) and can't be picked; leveling up across a tier shows a toast for
+  each newly unlocked Pokémon at the end of the battle
 - Battle (menu option **Poked**): turn-based fight against a random opponent
   team — screen A is the narrated battle log, screen B is the visual arena
   with sprites and GSAP-animated HP bars
