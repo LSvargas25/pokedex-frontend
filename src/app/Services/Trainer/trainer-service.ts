@@ -3,6 +3,11 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
+export interface NextUnlock {
+  level: number;
+  pokemonNames: string[];
+}
+
 export interface Trainer {
   id: string;
   username: string;
@@ -12,6 +17,8 @@ export interface Trainer {
   wins: number;
   losses: number;
   team: string[];
+  unlockedPokemon: string[];
+  nextUnlock: NextUnlock | null;
 }
 
 @Injectable({
