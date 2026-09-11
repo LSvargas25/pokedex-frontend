@@ -10,18 +10,18 @@ import {
 import { AttackOutcome } from '../../../../Services/Battle/battle-service';
 
 const LETTERS_TO_WIN = 5;
-const PER_LETTER_MS = 900;
-const PERFECT_TOTAL_MS = 3500;
-const HIT_TOTAL_MS = 6000;
+const PER_LETTER_MS = 1800;
+const PERFECT_TOTAL_MS = 7000;
+const HIT_TOTAL_MS = 12000;
 
 /**
  * Mini-juego de letras (el difícil): aparece una letra A-Z; hay que pulsarla
- * en el teclado físico dentro de 900ms. Cada acierto muestra otra letra
+ * en el teclado físico dentro de 1800ms. Cada acierto muestra otra letra
  * distinta a la anterior.
- *   tecla incorrecta, o se agota la ventana de 900ms -> miss (sin reintentos)
- *   5 aciertos en <= 3.5s totales -> perfect
- *   5 aciertos entre 3.5s y 6s    -> hit
- *   no llega a 5 en 6s totales     -> miss (el tiempo total manda)
+ *   tecla incorrecta, o se agota la ventana de 1800ms -> miss (sin reintentos)
+ *   5 aciertos en <= 7s totales   -> perfect
+ *   5 aciertos entre 7s y 12s     -> hit
+ *   no llega a 5 en 12s totales    -> miss (el tiempo total manda)
  *
  * El listener de teclado se registra a nivel de documento en ngOnInit y se
  * quita explícitamente tanto en finish() (apenas se decide el resultado) como
