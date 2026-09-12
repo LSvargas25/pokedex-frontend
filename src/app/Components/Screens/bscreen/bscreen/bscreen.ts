@@ -1,4 +1,4 @@
-import { Component, ElementRef, AfterViewInit, ViewChild, ChangeDetectorRef, Type } from '@angular/core';
+import { Component, ElementRef, AfterViewInit, ViewChild, Type } from '@angular/core';
 import { ScreenService } from '../../../../Services/Pokedex/On-OFF Service/screen-service';
 import { gsap } from 'gsap';
 import { PokedService } from '../../../../Services/Screens/poked-screen-state';
@@ -24,12 +24,10 @@ export class Bscreen implements AfterViewInit {
 
   constructor(
     private screenService: ScreenService,
-    private cd: ChangeDetectorRef,
     private pokedService: PokedService
   ) {
     this.screenService.screenState$.subscribe(state => {
       this.isOn = state;
-      this.cd.detectChanges();
       if (this.isOn) this.startScreen();
       else this.offScreen();
     });
