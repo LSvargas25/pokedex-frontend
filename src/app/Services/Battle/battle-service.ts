@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
@@ -66,9 +66,9 @@ export interface BattleAttackResponse {
   providedIn: 'root',
 })
 export class BattleService {
-  private readonly apiUrl = `${environment.apiBaseUrl}/api/battle`;
+  private readonly http = inject(HttpClient);
 
-  constructor(private readonly http: HttpClient) {}
+  private readonly apiUrl = `${environment.apiBaseUrl}/api/battle`;
 
   /** POST /api/battle/start — crea una batalla nueva para el trainer autenticado. */
   startBattle(): Observable<BattleStartResponse> {

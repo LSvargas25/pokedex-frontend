@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, OnInit, ViewChild, effect, signal } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, effect, signal, inject } from '@angular/core';
 import { BattleService } from '../../../../../Services/Battle/battle-service';
 import { BattleStateService } from '../../../../../Services/Battle/battle-state';
 import { TrainerService } from '../../../../../Services/Trainer/trainer-service';
@@ -12,16 +12,16 @@ import { TrainerService } from '../../../../../Services/Trainer/trainer-service'
   styleUrl: './ascreen-poked.scss',
 })
 export class AscreenPoked implements OnInit {
+  readonly battle = inject(BattleStateService);
+  private readonly battleService = inject(BattleService);
+  private readonly trainerService = inject(TrainerService);
+
   @ViewChild('consoleBox') consoleBox?: ElementRef<HTMLDivElement>;
 
   readonly loading = signal(true);
   readonly errorMsg = signal<string | null>(null);
 
-  constructor(
-    readonly battle: BattleStateService,
-    private readonly battleService: BattleService,
-    private readonly trainerService: TrainerService
-  ) {
+  constructor() {
     // Autoscroll hacia la línea más nueva cada vez que el log cambia.
     effect(() => {
       this.battle.log();
@@ -64,7 +64,10 @@ export class AscreenPoked implements OnInit {
     });
   }
 
-  private readError(err: any, fallback: string): string {
+  private readError(
+    err: { error?: { message?: string; error?: string }; message?: string } | null,
+    fallback: string
+  ): string {
     return err?.error?.message || err?.error?.error || err?.message || fallback;
   }
 }

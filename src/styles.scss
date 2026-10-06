@@ -1,1 +1,24 @@
 /* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+}
+
+/* Celular vertical: la segunda mitad del Pokédex va debajo de la primera (ver App). */
+.stacked {
+  .Slide {
+    left: 400px !important;
+    top: 990px !important;
+  }
+
+  .yelcir {
+    right: auto !important;
+    left: 870px !important;
+    top: 1620px !important;
+  }
+}

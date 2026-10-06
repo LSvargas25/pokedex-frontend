@@ -16,6 +16,10 @@
       [class.disabled]="isDisabled(p.name)"
       [class.locked]="!isUnlocked(p.name)"
       (click)="toggle(p.name)"
+      (keydown.enter)="toggle(p.name)"
+      tabindex="0"
+      [attr.aria-pressed]="isSelected(p.name)"
+      [attr.aria-disabled]="isDisabled(p.name) || !isUnlocked(p.name)"
     >
       <img *ngIf="p.sprite" [src]="p.sprite" [alt]="p.name" />
       <span class="name">{{ p.name }}</span>

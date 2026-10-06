@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, AfterViewInit, Type, OnDestroy } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewInit, Type, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import gsap from 'gsap';
@@ -19,13 +19,17 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./ascreen.scss']
 })
 export class AScreen implements AfterViewInit, OnDestroy {
+  private screenService = inject(ScreenService);
+  private pokedService = inject(PokedService);
+  private pokemonSelected = inject(PokemonSelected);
+
   @ViewChild('videoPlayer') videoPlayer!: ElementRef<HTMLVideoElement>;
   @ViewChild('blackSplit') blackSplit!: ElementRef<HTMLDivElement>;
 
   isOn = false;
   showMenu = false;
   showBackDiv = false
-  currentComponent: Type<any> | null = null; // componente dinámico
+  currentComponent: Type<unknown> | null = null; // componente dinámico
   currentVideo = 'assets/videos/intro.mp4';
   options = ['Poked', 'Pokémon Search', 'Trainer Info', 'Settings'];
   showBack = false;
@@ -37,11 +41,7 @@ export class AScreen implements AfterViewInit, OnDestroy {
   private destroy$ = new Subject<void>();
   forceSilence = false; // audio solo en menú (si el usuario no está muteado)
 
-  constructor(
-    private screenService: ScreenService,
-    private pokedService: PokedService,
-    private pokemonSelected: PokemonSelected // inyectar el servicio
-  ) {
+  constructor() {
     this.screenService.screenState$
       .pipe(takeUntil(this.destroy$))
       .subscribe(state => {
@@ -155,7 +155,9 @@ export class AScreen implements AfterViewInit, OnDestroy {
       try {
         v.pause();
         v.currentTime = 0;
-      } catch {}
+      } catch {
+        // el video puede no estar listo todavía
+      }
     });
   }
 
@@ -166,7 +168,9 @@ export class AScreen implements AfterViewInit, OnDestroy {
       try {
         v.muted = muted;
         v.volume = muted ? 0 : vol;
-      } catch {}
+      } catch {
+        // el video puede no estar listo todavía
+      }
     });
   }
 

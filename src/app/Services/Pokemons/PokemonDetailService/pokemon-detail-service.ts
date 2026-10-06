@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 
 export interface PokemonFullData {
   id: number;
@@ -20,9 +21,9 @@ export interface PokemonFullData {
   providedIn: 'root'
 })
 export class PokemonDetailService {
-  private apiUrl = 'http://localhost:3000/api/pokemons';
+  private http = inject(HttpClient);
 
-  constructor(private http: HttpClient) {}
+  private readonly apiUrl = `${environment.apiBaseUrl}/api/pokemons`;
 
   getPokemonFullData(nameOrId: string): Observable<PokemonFullData> {
     return this.http.get<PokemonFullData>(`${this.apiUrl}/${nameOrId}`);

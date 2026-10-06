@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component,HostListener,OnInit,OnDestroy } from '@angular/core';
+import { Component, HostListener, OnInit, OnDestroy, inject } from '@angular/core';
 import { PokemonSelected } from '../../../../../Services/Options/SearchPokemon/PokemonSelected/pokemon-selected';
 import { PokemonDetailService,PokemonFullData } from '../../../../../Services/Pokemons/PokemonDetailService/pokemon-detail-service';
 
@@ -11,14 +11,15 @@ import { PokemonDetailService,PokemonFullData } from '../../../../../Services/Po
   styleUrls: ['./bscreen-pokemon-search.scss']
 })
 export class BScreenPokemonSearch implements OnInit, OnDestroy {
+  private pokemonSelected = inject(PokemonSelected);
+  private detailService = inject(PokemonDetailService);
+
   Ison = true;
   pokemonData: PokemonFullData | null = null;
   get selectedPokemon$() { return this.pokemonSelected.selectedPokemon$; }
 
   totalPages = 3;
   currentPage = 0;
-
-  constructor(private pokemonSelected: PokemonSelected, private detailService: PokemonDetailService) {}
 
   ngOnInit() {
     // Resetear al entrar

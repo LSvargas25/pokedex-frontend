@@ -52,6 +52,9 @@
          [ngClass]="{'selected': p === pokemonSelected.getSelected()}"
          [ngStyle]="{'background': getPokemonColor(p.types)}"
          (click)="onSelectPokemon(p)"
+         (keydown.enter)="onSelectPokemon(p)"
+         role="button"
+         tabindex="0"
          style="cursor: pointer;">
       <div class="Content">
         <div class="CardPhoto">
@@ -59,7 +62,7 @@
         </div>
         <p class="CardID">#{{p.id}}</p>
         <h2 class="CardName">{{p.name}}</h2>
-        <img *ngIf="p === pokemonSelected.getSelected()" src="/assets/images/pokeball.ico" class="PokeballIcon" />
+        <img *ngIf="p === pokemonSelected.getSelected()" src="/assets/images/pokeball.ico" class="PokeballIcon" alt="Seleccionado" />
       </div>
     </div>
   </div>

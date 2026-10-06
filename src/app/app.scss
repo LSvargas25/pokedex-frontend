@@ -1,0 +1,27 @@
+.stage {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.canvas {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  overflow: hidden;
+  transform-origin: top center;
+}
+
+/*
+ * Reproduce el sistema de coordenadas original (el <body> de una pantalla de ~1900 px):
+ * los hijos absolutos se ubican desde el borde, los de flujo con 8 px de margen.
+ */
+.device {
+  position: absolute;
+  top: 0;
+  left: -380px;
+  width: 1895px;
+  height: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}

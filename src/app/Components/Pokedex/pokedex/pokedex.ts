@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ScreenService } from '../../../Services/Pokedex/On-OFF Service/screen-service';
 import { AScreen } from '../../Screens/ascreen/ascreen';
@@ -12,9 +12,11 @@ import { Bscreen } from '../../Screens/bscreen/bscreen/bscreen';
   styleUrls: ['./pokedex.scss']
 })
 export class Pokedex {
-  isOn: boolean = false;
+  private screenService = inject(ScreenService);
 
-constructor(private screenService: ScreenService) {
+  isOn = false;
+
+constructor() {
     // Suscribirse al estado de la pantalla
     this.screenService.screenState$.subscribe(state => {
       this.isOn = state;

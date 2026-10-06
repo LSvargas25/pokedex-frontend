@@ -1,3 +1,18 @@
-<app-pokedex></app-pokedex>
-<app-ligths></app-ligths>
+<app-server-wakeup></app-server-wakeup>
+
+<div class="stage" [style.height.px]="canvas().height * scale()">
+  <div
+    class="canvas"
+    [class.stacked]="stacked()"
+    [style.width.px]="canvas().width"
+    [style.height.px]="canvas().height"
+    [style.transform]="'translateX(-50%) scale(' + scale() + ')'"
+  >
+    <div class="device">
+      <app-pokedex></app-pokedex>
+      <app-ligths></app-ligths>
+    </div>
+  </div>
+</div>
+
 <router-outlet></router-outlet>
