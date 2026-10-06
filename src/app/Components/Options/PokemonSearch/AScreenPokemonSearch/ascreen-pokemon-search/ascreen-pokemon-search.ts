@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, inject } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { PokemonService,Pokemon } from '../../../../../Services/Pokemons/PokemonService/pokemon-service';
@@ -13,6 +13,8 @@ import { PokemonSelected } from '../../../../../Services/Options/SearchPokemon/P
   styleUrls: ['./ascreen-pokemon-search.scss']
 })
 export class AScreenPokemonSearch implements OnInit {
+  private pokemonService = inject(PokemonService);
+
   AScreen = true;
   Targets = true;
   FilterBy = true;
@@ -37,14 +39,13 @@ export class AScreenPokemonSearch implements OnInit {
   loading = false;
   error: string | null = null;
 
-  private scrollInterval: any;
+  private scrollInterval?: ReturnType<typeof setInterval>;
 
   public pokemonSelected: PokemonSelected; // Ensure this is properly initialized in the constructor
 
-  constructor(
-    private pokemonService: PokemonService,
-    pokemonSelected: PokemonSelected // Injecting the service
-  ) {
+  constructor() {
+    const pokemonSelected = inject(PokemonSelected);
+
     this.pokemonSelected = pokemonSelected; // Assigning it to the class property
   }
 
@@ -207,7 +208,7 @@ getPokemonColor(types: string[]): string {
   private stopAutoScroll(): void {
     if (this.scrollInterval) {
       clearInterval(this.scrollInterval);
-      this.scrollInterval = null;
+      this.scrollInterval = undefined;
     }
   }
 }

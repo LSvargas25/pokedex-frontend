@@ -1,13 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  ViewChild,
-  computed,
-  effect,
-  signal,
-} from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild, computed, effect, signal, inject } from '@angular/core';
 import { gsap } from 'gsap';
 import {
   AttackOutcome,
@@ -39,6 +31,11 @@ const DEFAULT_MOVES: Move[] = [
   styleUrl: './bscreen-poked.scss',
 })
 export class BScreenPoked implements AfterViewInit {
+  readonly battle = inject(BattleStateService);
+  private readonly battleService = inject(BattleService);
+  private readonly pokedService = inject(PokedService);
+  private readonly sound = inject(SoundService);
+
   @ViewChild('playerHp') playerHpRef?: ElementRef<HTMLDivElement>;
   @ViewChild('opponentHp') opponentHpRef?: ElementRef<HTMLDivElement>;
   @ViewChild('playerSprite') playerSpriteRef?: ElementRef<HTMLImageElement>;
@@ -55,12 +52,7 @@ export class BScreenPoked implements AfterViewInit {
   /** true mientras no se puede elegir un movimiento. */
   readonly busy = computed(() => this.phase() !== 'choosing');
 
-  constructor(
-    readonly battle: BattleStateService,
-    private readonly battleService: BattleService,
-    private readonly pokedService: PokedService,
-    private readonly sound: SoundService
-  ) {
+  constructor() {
     // Anima las barras de HP con GSAP cuando cambia el HP mostrado.
     effect(() => {
       const player = this.battle.playerActive();

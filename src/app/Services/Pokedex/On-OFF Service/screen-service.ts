@@ -13,8 +13,6 @@ export class ScreenService {
   private resetSubject = new Subject<void>();
   reset$ = this.resetSubject.asObservable();
 
-  constructor() {}
-
   powerOn() {
     this.screenState.next(true);
   }

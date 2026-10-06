@@ -1,4 +1,4 @@
-import { Component, ElementRef, AfterViewInit, ViewChild, Type } from '@angular/core';
+import { Component, ElementRef, AfterViewInit, ViewChild, Type, inject } from '@angular/core';
 import { ScreenService } from '../../../../Services/Pokedex/On-OFF Service/screen-service';
 import { gsap } from 'gsap';
 import { PokedService } from '../../../../Services/Screens/poked-screen-state';
@@ -15,17 +15,17 @@ import { BScreenPokemonSearch } from '../../../Options/PokemonSearch/BScreenPoke
   imports: [CommonModule, BScreenPoked, BScreenTrainer, BScreenPokemonSearch]
 })
 export class Bscreen implements AfterViewInit {
+  private screenService = inject(ScreenService);
+  private pokedService = inject(PokedService);
+
   @ViewChild('videoPlayer', { static: false }) videoPlayer!: ElementRef<HTMLVideoElement>;
   @ViewChild('pokeSplit', { static: false }) pokeSplit!: ElementRef<HTMLDivElement>;
 
   isOn = false;
   currentVideo = 'assets/videos/pokevid.mp4';
-  currentBComponent: Type<any> | null = null;
+  currentBComponent: Type<unknown> | null = null;
 
-  constructor(
-    private screenService: ScreenService,
-    private pokedService: PokedService
-  ) {
+  constructor() {
     this.screenService.screenState$.subscribe(state => {
       this.isOn = state;
       if (this.isOn) this.startScreen();

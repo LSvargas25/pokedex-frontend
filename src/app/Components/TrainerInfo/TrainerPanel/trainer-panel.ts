@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, signal } from '@angular/core';
+import { Component, effect, signal, inject } from '@angular/core';
 import { AuthService } from '../../../Services/Auth/auth-service';
 import { AuthForm } from '../../Auth/AuthForm/auth-form';
 import { TeamSelect } from '../TeamSelect/team-select';
@@ -20,9 +20,11 @@ type View = 'login' | 'profile' | 'team';
   styleUrl: './trainer-panel.scss',
 })
 export class TrainerPanel {
+  private readonly auth = inject(AuthService);
+
   readonly view = signal<View>('login');
 
-  constructor(private readonly auth: AuthService) {
+  constructor() {
     let wasLoggedIn = false;
     effect(() => {
       const loggedIn = this.auth.isLoggedIn();

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output, computed, signal } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, computed, signal, inject } from '@angular/core';
 import {
   PokemonService,
   RosterEntry,
@@ -16,6 +16,9 @@ const TEAM_SIZE = 3;
   styleUrl: './team-select.scss',
 })
 export class TeamSelect implements OnInit {
+  private readonly pokemonService = inject(PokemonService);
+  private readonly trainerService = inject(TrainerService);
+
   /** Equipo guardado (o cancelado): volver al perfil. */
   @Output() done = new EventEmitter<void>();
 
@@ -29,11 +32,6 @@ export class TeamSelect implements OnInit {
   readonly errorMsg = signal<string | null>(null);
 
   readonly canSave = computed(() => this.selected().length === TEAM_SIZE);
-
-  constructor(
-    private readonly pokemonService: PokemonService,
-    private readonly trainerService: TrainerService
-  ) {}
 
   ngOnInit(): void {
     // Prellenar con el equipo actual y saber qué está desbloqueado.

@@ -3,7 +3,12 @@
   <span
     *ngFor="let dot of [0, 1, 2]; let i = index"
     (click)="setPage(i)"
+    (keydown.enter)="setPage(i)"
     (mouseover)="setPage(i)"
+    (focus)="setPage(i)"
+    role="button"
+    tabindex="0"
+    [attr.aria-label]="'Página ' + (i + 1)"
     [class.active]="i === currentPage"
   ></span>
 </div>

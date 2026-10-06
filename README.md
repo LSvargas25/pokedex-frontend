@@ -1,108 +1,125 @@
-# Pokedex Frontend
+# Pokédex
 
-An Angular Pokédex app: browse and search Pokémon, backed by [pokedex-backend](https://github.com/LSvargas25/pokedex-backend) (a small caching proxy in front of the public PokeAPI).
+[![CI](https://github.com/LSvargas25/pokedex-frontend/actions/workflows/ci.yml/badge.svg)](https://github.com/LSvargas25/pokedex-frontend/actions/workflows/ci.yml)
+
+A Pokédex you can actually hold: a two-panel, Kanto-style device built in
+Angular, with Pokémon search, trainer accounts, team building and a turn-based
+battle mode driven by skill minigames.
+
+**Live demo → [pokedex-frontend-md48.onrender.com](https://pokedex-frontend-md48.onrender.com)**
+
+> The API runs on Render's free plan and sleeps when idle. On the first visit
+> the app shows *"Despertando el servidor…"* and retries until it answers
+> (usually under a minute).
+
+| Desktop | Tablet | Phone |
+| --- | --- | --- |
+| ![Desktop: Pokémon search with Charmander's detail](docs/screenshots/desktop.png) | ![Tablet: main menu](docs/screenshots/tablet.png) | ![Phone: panels stacked vertically](docs/screenshots/mobile.png) |
 
 ## Features
 
-- Browse and search Pokémon
-- Pokémon detail view
-- Trainer accounts: sign up / sign in with email+password, or "Continuar con
-  Google" (Supabase Auth's native Google OAuth provider). An already-active
-  session is picked up automatically on load, so returning to Trainer Info
-  after login (or after the Google redirect) goes straight to the profile
-- Trainer profile: level, XP progress, win/loss record
-- Team selection: pick exactly 3 Pokémon, persisted through the backend.
-  Pokémon above the trainer's current level tier show locked (with the level
-  required) and can't be picked; leveling up across a tier shows a toast for
-  each newly unlocked Pokémon at the end of the battle
-- Battle (menu option **Poked**): turn-based fight against a random opponent
-  team — screen A is the narrated battle log, screen B is the visual arena
-  with sprites and GSAP-animated HP bars
-- Each turn you pick one of **3 moves**, each gated by its own skill minigame
-  (reaction semaphore / timing bar / keyboard letters) whose result — `miss` /
-  `hit` / `perfect` — scales the attack. Turn resolution plays back its events
-  with code-generated sound effects (no audio files, Web Audio API)
+- **Browse and search** Pokémon by name, type and generation; screen B shows
+  the detail card (types, size, abilities, weaknesses, evolution line)
+- **Trainer accounts** with email/password or *Continuar con Google*
+  (Supabase Auth); the session is restored on reload
+- **Trainer profile**: level, XP bar, win/loss record
+- **Team selection**: pick 3 Pokémon; stronger ones unlock as the trainer
+  levels up (enforced by the backend too)
+- **Battle mode (Poked)**: a 3-vs-3 turn-based fight against a random team.
+  Each move is gated by a minigame (reaction semaphore, timing bar, keyboard
+  letters) whose `miss` / `hit` / `perfect` result scales the damage. HP bars
+  animate with GSAP and sound effects are generated with the Web Audio API
+- **Responsive**: the device is drawn on a fixed-size canvas that scales to the
+  viewport; on portrait phones the two panels stack vertically
+- **Cold-start aware**: requests to the API retry with backoff while the
+  server wakes up, with a status banner instead of empty screens
 
 ## Tech stack
 
-- Angular 20 (standalone components), TypeScript, RxJS, GSAP
-- Supabase JS (`@supabase/supabase-js`) for authentication
+| Layer | Tech |
+| --- | --- |
+| Frontend | Angular 20 (standalone components, signals), TypeScript, RxJS, GSAP, SCSS |
+| Auth | Supabase Auth (`@supabase/supabase-js`) |
+| Backend | [pokedex-backend](https://github.com/LSvargas25/pokedex-backend): Node.js + Express caching proxy over [PokeAPI](https://pokeapi.co/), trainer data in Supabase (Postgres) |
+| Quality | ESLint (angular-eslint), GitHub Actions CI (lint + build) |
+| Hosting | Render (static site + web service) |
 
-## Environment variables
+## Running locally
 
-Auth and the trainer API are configured through Angular's environment files
-(`src/environments/environment.ts`, and `environment.prod.ts` for production
-builds):
-
-| Key               | Description                                              | Example                                  |
-| ----------------- | -------------------------------------------------------- | ---------------------------------------- |
-| `supabaseUrl`     | Supabase project URL                                     | `https://xxxx.supabase.co`              |
-| `supabaseAnonKey` | Supabase anon / publishable key (safe to ship publicly) | `sb_publishable_...`                     |
-| `apiBaseUrl`      | Base URL of `pokedex-backend`                            | `http://localhost:3000`                  |
-
-Google sign-in needs no extra frontend config beyond the values above — it
-rides the same Supabase project. It does need the **Google provider enabled**
-in the Supabase dashboard (Authentication → Providers → Google, with a
-Google Cloud OAuth client id/secret and the Supabase callback URL registered
-on the Google side). Until that provider is turned on, the "Continuar con
-Google" button will redirect to Google but the callback will fail.
-
-The committed values point at the shared Supabase project and a local backend.
-The anon key is public by design — row-level security on Supabase protects the
-data. To use your own project, edit both environment files.
-
-## Getting started
+Requirements: Node.js 20+ and npm.
 
 ```bash
+# 1. Backend (http://localhost:3000)
+git clone https://github.com/LSvargas25/pokedex-backend.git
+cd pokedex-backend
+npm install
+cp .env.example .env    # fill in SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY
+npm start
+
+# 2. Frontend (http://localhost:4200)
+git clone https://github.com/LSvargas25/pokedex-frontend.git
+cd pokedex-frontend
 npm install
 npm start
 ```
 
-The auth / profile / team flow needs `pokedex-backend` running in parallel:
+| Command | What it does |
+| --- | --- |
+| `npm start` | Dev server on http://localhost:4200 (talks to `http://localhost:3000`) |
+| `npm run lint` | ESLint over TypeScript and templates |
+| `npx ng build` | Production build into `dist/Pokefron/browser` (talks to the Render API) |
 
-```bash
-# in the pokedex-backend repo
-npm install
-npm start        # serves http://localhost:3000
-```
+### Configuration
 
-Backend endpoints used by the frontend (both require
-`Authorization: Bearer <supabase access token>`, added automatically by the
-HTTP interceptor):
+All API calls go through `environment.apiBaseUrl`:
 
-- `GET /api/trainer/me` → `{ id, username, level, xp, xpToNextLevel, wins, losses, team }`
-- `PUT /api/trainer/team` with body `{ team: [name1, name2, name3] }` → updated trainer
-- `POST /api/battle/start` with body `{}` → `{ battleId, playerTeam, opponentTeam, playerActiveIndex, opponentActiveIndex, log, moves }`
-- `POST /api/battle/:battleId/attack` with body `{ moveIndex: 0|1|2, outcome: "miss"|"hit"|"perfect" }` → `{ battleId, log, events, playerTeam, opponentTeam, playerActiveIndex, opponentActiveIndex, status, rewards }`
+| File | `apiBaseUrl` |
+| --- | --- |
+| `src/environments/environment.ts` (dev) | `http://localhost:3000` |
+| `src/environments/environment.prod.ts` (production build) | `https://pokedex-backend-lx85.onrender.com` |
 
-  where `status` is `"ongoing" | "win" | "lose"`, `rewards` is `null` while ongoing
-  or `{ xpGained, newLevel, leveledUp }` at the end, a fighter is
-  `{ name, types, attack, defense, speed, maxHp, currentHp, sprite }`,
-  `moves` is 3 entries of `{ name, powerMultiplier }`, and each event is
-  `{ actor: "player"|"opponent", move, outcome, damage, isCrit, targetFainted }`.
+Both files also hold `supabaseUrl` and `supabaseAnonKey`. The anon key is public
+by design; row-level security in Supabase protects the data. Google sign-in
+additionally needs the Google provider enabled in the Supabase dashboard
+(Authentication → Providers → Google).
 
 ### Trying the flow
 
-1. Start the backend, then `npm start` the frontend.
-2. Power on the Pokédex, open the menu, choose **Trainer Info**.
-3. Create an account (trainer name + email + password), then sign in.
-4. The profile shows level, XP bar and record. Click **Elegir equipo**.
-5. Pick exactly 3 Pokémon and **Guardar equipo** — it returns to the profile.
-6. Reload the page: the session and saved team persist.
-7. Open the menu again and choose **Poked**. With a full team of 3 the battle
-   starts automatically: screen A streams the log, screen B shows both active
-   Pokémon and 3 move buttons. Pick a move, play its minigame, and watch the
-   turn resolve with sound. Repeat until the battle ends, then **Volver al
-   menú**. Without a full team, screen A shows "Primero arma tu equipo en
-   Trainer Info".
+1. Press **ON**, wait for the intro, then pick **Pokémon Search** and click a
+   Pokémon to see its card on the right screen.
+2. Open **Trainer Info**, create an account (or continue with Google) and sign in.
+3. Click **Elegir equipo**, choose 3 unlocked Pokémon and save.
+4. Back in the menu, choose **Poked**: pick a move, play its minigame and watch
+   the turn resolve. Wins grant XP; level-ups unlock new Pokémon.
 
-## Status
+## Backend endpoints used
 
-Small learning/portfolio project demonstrating a full-stack setup (Angular
-frontend + a lightweight Node/Express backend + Supabase Auth) around a public
-API.
+All requests carry `Authorization: Bearer <supabase access token>` when the
+user is signed in (added by an HTTP interceptor). Full API docs live in the
+[backend README](https://github.com/LSvargas25/pokedex-backend#api).
+
+| Method | Endpoint | Used for |
+| --- | --- | --- |
+| `GET` | `/health` | Wake the server on load |
+| `GET` | `/api/pokemons`, `/api/pokemons/filter` | Search list |
+| `GET` | `/api/pokemons/:idOrName` | Detail card |
+| `GET` | `/api/pokemon/roster` | Team selection with unlock levels |
+| `GET` / `PUT` | `/api/trainer/me`, `/api/trainer/team` | Profile and team |
+| `POST` | `/api/battle/start`, `/api/battle/:id/attack` | Battle |
+
+## Project structure
+
+```
+src/app/
+  Components/     Pokédex shell, screens A/B, menu options, battle minigames,
+                  trainer panels, server wake-up banner
+  Services/       API clients (pokemons, trainer, battle), auth, screen state,
+                  server status
+  Interceptors/   auth token + cold-start retry with backoff
+src/environments/ dev / prod configuration
+```
 
 ## Future improvements
 
-- Add tests
+- Unit tests for services and minigames
 - Per-species movesets and manual switching of the active fighter

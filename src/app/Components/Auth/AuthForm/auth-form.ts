@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../Services/Auth/auth-service';
 
@@ -13,6 +13,8 @@ type Mode = 'login' | 'register';
   styleUrl: './auth-form.scss',
 })
 export class AuthForm {
+  private readonly auth = inject(AuthService);
+
   readonly mode = signal<Mode>('login');
   readonly loading = signal(false);
   readonly errorMsg = signal<string | null>(null);
@@ -21,8 +23,6 @@ export class AuthForm {
   username = '';
   email = '';
   password = '';
-
-  constructor(private readonly auth: AuthService) {}
 
   toggleMode(): void {
     this.mode.set(this.mode() === 'login' ? 'register' : 'login');

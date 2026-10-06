@@ -1,0 +1,11 @@
+@if (status() === 'waking') {
+  <div class="notice" role="status" aria-live="polite">
+    <span class="spinner" aria-hidden="true"></span>
+    Despertando el servidor, puede tardar hasta un minuto…
+  </div>
+} @else if (status() === 'unreachable') {
+  <div class="notice notice--error" role="alert">
+    No se pudo conectar con el servidor.
+    <button type="button" (click)="reload()">Reintentar</button>
+  </div>
+}

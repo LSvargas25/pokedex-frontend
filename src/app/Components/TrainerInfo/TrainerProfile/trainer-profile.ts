@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output, signal } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, signal, inject } from '@angular/core';
 import { AuthService } from '../../../Services/Auth/auth-service';
 import { Trainer, TrainerService } from '../../../Services/Trainer/trainer-service';
 
@@ -11,17 +11,15 @@ import { Trainer, TrainerService } from '../../../Services/Trainer/trainer-servi
   styleUrl: './trainer-profile.scss',
 })
 export class TrainerProfile implements OnInit {
+  private readonly trainerService = inject(TrainerService);
+  private readonly auth = inject(AuthService);
+
   /** El usuario pidió ir a la pantalla de selección de equipo. */
   @Output() chooseTeam = new EventEmitter<void>();
 
   readonly trainer = signal<Trainer | null>(null);
   readonly loading = signal(true);
   readonly errorMsg = signal<string | null>(null);
-
-  constructor(
-    private readonly trainerService: TrainerService,
-    private readonly auth: AuthService
-  ) {}
 
   ngOnInit(): void {
     this.load();
