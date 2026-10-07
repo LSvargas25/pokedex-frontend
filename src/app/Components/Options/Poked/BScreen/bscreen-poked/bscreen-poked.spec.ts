@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { testProviders } from '../../../../../../testing/test-providers';
 
 import { BScreenPoked } from './bscreen-poked';
 
@@ -8,7 +9,8 @@ describe('BScreenPoked', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BScreenPoked]
+      imports: [BScreenPoked],
+      providers: testProviders
     })
     .compileComponents();
 

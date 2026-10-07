@@ -32,5 +32,8 @@
   <p class="state">Cargando perfil…</p>
 </ng-template>
 <ng-template #errorTpl>
-  <p class="state error">{{ errorMsg() }}</p>
+  <div class="state error" role="alert">
+    <p>{{ errorMsg() }}</p>
+    <button type="button" class="primary" (click)="load()">Reintentar</button>
+  </div>
 </ng-template>

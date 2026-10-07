@@ -1,39 +1,35 @@
 import { CommonModule } from '@angular/common';
 import { Component, effect, signal, inject } from '@angular/core';
 import { AuthService } from '../../../Services/Auth/auth-service';
-import { AuthForm } from '../../Auth/AuthForm/auth-form';
+import { DeviceNavigation } from '../../../Services/Navigation/device-navigation';
 import { TeamSelect } from '../TeamSelect/team-select';
 import { TrainerProfile } from '../TrainerProfile/trainer-profile';
 
-type View = 'login' | 'profile' | 'team';
+type View = 'profile' | 'team';
 
 /**
- * Contenedor de la opción "Trainer Info" del menú.
- * Alterna entre login/registro, perfil y selección de equipo con una
- * signal interna, sin Angular Router.
+ * Contenedor de la opción "Trainer Info" del menú (/trainer, protegida por
+ * authGuard). Alterna entre perfil y selección de equipo con una signal interna.
  */
 @Component({
   selector: 'app-trainer-panel',
   standalone: true,
-  imports: [CommonModule, AuthForm, TrainerProfile, TeamSelect],
+  imports: [CommonModule, TrainerProfile, TeamSelect],
   templateUrl: './trainer-panel.html',
   styleUrl: './trainer-panel.scss',
 })
 export class TrainerPanel {
   private readonly auth = inject(AuthService);
+  private readonly nav = inject(DeviceNavigation);
 
-  readonly view = signal<View>('login');
+  readonly view = signal<View>('profile');
 
   constructor() {
-    let wasLoggedIn = false;
+    // Al cerrar sesión desde el perfil se vuelve al menú.
     effect(() => {
-      const loggedIn = this.auth.isLoggedIn();
-      if (loggedIn && !wasLoggedIn) {
-        this.view.set('profile');
-      } else if (!loggedIn) {
-        this.view.set('login');
+      if (!this.auth.isLoggedIn()) {
+        this.nav.home();
       }
-      wasLoggedIn = loggedIn;
     });
   }
 }

@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { testProviders } from '../../../../../../testing/test-providers';
 
 import { BScreenPokemonSearch } from './bscreen-pokemon-search';
 
@@ -8,7 +9,8 @@ describe('BScreenPokemonSearch', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BScreenPokemonSearch]
+      imports: [BScreenPokemonSearch],
+      providers: testProviders
     })
     .compileComponents();
 

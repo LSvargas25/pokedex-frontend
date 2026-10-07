@@ -5,6 +5,7 @@ import {
   RosterEntry,
 } from '../../../Services/Pokemons/PokemonService/pokemon-service';
 import { TrainerService } from '../../../Services/Trainer/trainer-service';
+import { friendlyHttpError } from '../../../Services/Http/friendly-error';
 
 const TEAM_SIZE = 3;
 
@@ -51,7 +52,7 @@ export class TeamSelect implements OnInit {
         this.loading.set(false);
       },
       error: (err) => {
-        this.errorMsg.set(err?.message || 'No se pudieron cargar los pokémon.');
+        this.errorMsg.set(friendlyHttpError(err, 'No pudimos cargar los Pokémon. Intenta de nuevo'));
         this.loading.set(false);
       },
     });
@@ -96,7 +97,7 @@ export class TeamSelect implements OnInit {
       },
       error: (err) => {
         this.errorMsg.set(
-          err?.error?.message || err?.message || 'No se pudo guardar el equipo.'
+          friendlyHttpError(err, 'No pudimos guardar tu equipo. Intenta de nuevo')
         );
         this.saving.set(false);
       },

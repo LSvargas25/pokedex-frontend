@@ -10,6 +10,7 @@ import {
 } from '../../../../../Services/Battle/battle-service';
 import { BattleStateService } from '../../../../../Services/Battle/battle-state';
 import { PokedService } from '../../../../../Services/Screens/poked-screen-state';
+import { friendlyHttpError } from '../../../../../Services/Http/friendly-error';
 import { SoundService } from '../../../../../Services/Sound/sound-service';
 import { KeyboardLettersMinigame } from '../../../../Battle/Minigames/KeyboardLettersMinigame/keyboard-letters-minigame';
 import { SemaphoreMinigame } from '../../../../Battle/Minigames/SemaphoreMinigame/semaphore-minigame';
@@ -125,7 +126,7 @@ export class BScreenPoked implements AfterViewInit {
       },
       error: (err) => {
         this.attackError.set(
-          err?.error?.message || err?.error?.error || err?.message || 'Falló el ataque.'
+          friendlyHttpError(err, 'No pudimos enviar el ataque. Intenta de nuevo')
         );
         this.phase.set('choosing');
         this.selectedMoveIndex.set(null);

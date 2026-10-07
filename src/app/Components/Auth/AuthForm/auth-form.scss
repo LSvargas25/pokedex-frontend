@@ -11,11 +11,32 @@
   color: #101820;
 }
 
-h2 {
+.reason {
   margin: 0;
-  font-size: 15px;
+  font-size: 13px;
+  font-weight: 700;
   text-align: center;
-  letter-spacing: 0.5px;
+}
+
+.guest {
+  flex: none;
+  height: 36px;
+  font-size: 13px;
+}
+
+.secondary {
+  height: 30px;
+  border: 2px solid #000;
+  border-radius: 6px;
+  background: #fff;
+  color: #101820;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.secondary:disabled {
+  opacity: 0.6;
+  cursor: default;
 }
 
 form {
@@ -104,6 +125,7 @@ button {
 }
 
 .google {
+  flex: none;
   height: 32px;
   display: flex;
   align-items: center;
@@ -134,4 +156,10 @@ button {
   color: #fff;
   font-size: 10px;
   font-weight: 700;
+}
+
+.privacy-link {
+  align-self: center;
+  font-size: 10px;
+  color: #555;
 }

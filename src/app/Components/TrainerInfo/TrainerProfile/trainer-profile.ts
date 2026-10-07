@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, OnInit, Output, signal, inject } from '@angular/core';
 import { AuthService } from '../../../Services/Auth/auth-service';
 import { Trainer, TrainerService } from '../../../Services/Trainer/trainer-service';
+import { friendlyHttpError } from '../../../Services/Http/friendly-error';
 
 @Component({
   selector: 'app-trainer-profile',
@@ -35,7 +36,7 @@ export class TrainerProfile implements OnInit {
       },
       error: (err) => {
         this.errorMsg.set(
-          err?.error?.message || err?.message || 'No se pudo cargar el perfil.'
+          friendlyHttpError(err, 'No pudimos cargar tu entrenador. Intenta de nuevo')
         );
         this.loading.set(false);
       },

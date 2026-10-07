@@ -1,11 +1,12 @@
 import { TestBed } from '@angular/core/testing';
+import { testProviders } from '../../../testing/test-providers';
 import { PokedService } from './poked-screen-state';
 
 describe('PokedService', () => {
   let service: PokedService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({ providers: testProviders });
     service = TestBed.inject(PokedService);
   });
 

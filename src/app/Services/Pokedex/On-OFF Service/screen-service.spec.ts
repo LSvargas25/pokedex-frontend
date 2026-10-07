@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { testProviders } from '../../../../testing/test-providers';
 
 import { ScreenService } from './screen-service';
 
@@ -6,7 +7,7 @@ describe('ScreenService', () => {
   let service: ScreenService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({ providers: testProviders });
     service = TestBed.inject(ScreenService);
   });
 
