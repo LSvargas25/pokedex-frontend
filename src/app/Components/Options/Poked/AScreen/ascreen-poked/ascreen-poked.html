@@ -1,6 +1,11 @@
 <div class="poked-console">
   <ng-container *ngIf="battle.notice() as notice; else runtime">
-    <p class="notice">{{ notice }}</p>
+    <div class="notice">
+      <p>{{ notice }}</p>
+      @if (needsTeam()) {
+        <button type="button" class="retry" (click)="goToTrainerInfo()">Ir a Trainer Info</button>
+      }
+    </div>
   </ng-container>
 
   <ng-template #runtime>

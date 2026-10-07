@@ -4,7 +4,7 @@ import {
   PokemonService,
   RosterEntry,
 } from '../../../Services/Pokemons/PokemonService/pokemon-service';
-import { TrainerService } from '../../../Services/Trainer/trainer-service';
+import { Trainer, TrainerService } from '../../../Services/Trainer/trainer-service';
 import { friendlyHttpError } from '../../../Services/Http/friendly-error';
 
 const TEAM_SIZE = 3;
@@ -20,7 +20,9 @@ export class TeamSelect implements OnInit {
   private readonly pokemonService = inject(PokemonService);
   private readonly trainerService = inject(TrainerService);
 
-  /** Equipo guardado (o cancelado): volver al perfil. */
+  /** Equipo guardado: el entrenador actualizado que devolvió el backend. */
+  @Output() saved = new EventEmitter<Trainer>();
+  /** Cancelado: volver al perfil sin cambios. */
   @Output() done = new EventEmitter<void>();
 
   readonly teamSize = TEAM_SIZE;
@@ -91,9 +93,9 @@ export class TeamSelect implements OnInit {
     this.saving.set(true);
     this.errorMsg.set(null);
     this.trainerService.updateTeam(this.selected()).subscribe({
-      next: () => {
+      next: (trainer) => {
         this.saving.set(false);
-        this.done.emit();
+        this.saved.emit(trainer);
       },
       error: (err) => {
         this.errorMsg.set(

@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, AfterViewInit, Type, OnDestroy, effect, inject, untracked } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewInit, Type, OnDestroy, NgZone, effect, inject, untracked } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import gsap from 'gsap';
@@ -11,12 +11,13 @@ import { Settings } from '../../Options/Settings/Settings/settings';
 import { PokemonSelected } from '../../../Services/Options/SearchPokemon/PokemonSelected/pokemon-selected';
 import { AuthForm } from '../../Auth/AuthForm/auth-form';
 import { DeviceNavigation, DeviceScreen } from '../../../Services/Navigation/device-navigation';
+import { PhoneDock } from '../../../Directives/phone-dock';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'app-ascreen',
   standalone: true,
-  imports: [CommonModule, FormsModule, AscreenPoked,Settings],
+  imports: [CommonModule, FormsModule, AscreenPoked, Settings, PhoneDock],
   templateUrl: './ascreen.html',
   styleUrls: ['./ascreen.scss']
 })
@@ -25,6 +26,7 @@ export class AScreen implements AfterViewInit, OnDestroy {
   private pokedService = inject(PokedService);
   private pokemonSelected = inject(PokemonSelected);
   private nav = inject(DeviceNavigation);
+  private zone = inject(NgZone);
 
   @ViewChild('videoPlayer') videoPlayer!: ElementRef<HTMLVideoElement>;
   @ViewChild('blackSplit') blackSplit!: ElementRef<HTMLDivElement>;
@@ -38,6 +40,8 @@ export class AScreen implements AfterViewInit, OnDestroy {
 
   /** El intro ya terminó: desde aquí la pantalla sigue a la URL. */
   private introDone = false;
+  /** La vista (cortina, video) ya existe: antes no se puede encender. */
+  private viewReady = false;
   showBack = false;
 
   volume = 0.3;
@@ -80,13 +84,29 @@ export class AScreen implements AfterViewInit, OnDestroy {
   }
 
   private applyScreen(screen: DeviceScreen | null) {
-    // Apagado o en pleno intro: se aplica cuando termine (onVideoEnded).
+    // Link directo (/poked, /trainer, /login…) con el Pokédex apagado: se enciende
+    // solo, con la animación corta, y abre esa pantalla.
+    if (screen && !this.screenService.isOn) {
+      // Fuera del ciclo de detección de cambios: el Pokédex (padre) ya pintó "apagado".
+      if (this.viewReady) {
+        setTimeout(() => {
+          if (!this.screenService.isOn) this.screenService.powerOn({ quick: true });
+        });
+      }
+      return;
+    }
+    // Apagado o en pleno intro: se aplica cuando termine (finishIntro).
     if (!this.isOn || !this.introDone) return;
     if (screen) this.openOption(screen);
     else if (this.currentComponent) this.showMenuScreen();
   }
 
   ngAfterViewInit() {
+    this.viewReady = true;
+    // Si la app abrió directo en una ruta profunda, encender ahora que hay vista.
+    const screen = this.nav.screen();
+    if (screen) this.applyScreen(screen);
+
     if (this.videoPlayer) {
       this.videoPlayer.nativeElement.volume = this.volume;
       this.videoPlayer.nativeElement.muted = this.isMuted;
@@ -102,6 +122,7 @@ export class AScreen implements AfterViewInit, OnDestroy {
 
   /**Animación de encendido (abrir la cortina) */
   private startScreen() {
+    const quick = this.screenService.quickStart;
     this.showMenu = false;
     this.currentVideo = 'assets/videos/intro.mp4';
     const splitEl = this.blackSplit.nativeElement;
@@ -112,14 +133,18 @@ export class AScreen implements AfterViewInit, OnDestroy {
     gsap.set(bottom, { y: '0%' });
     splitEl.style.display = 'flex';
 
-    gsap.to(top, { y: '-100%', duration: 1, ease: 'power2.inOut' });
+    const duration = quick ? 0.3 : 1;
+    gsap.to(top, { y: '-100%', duration, ease: 'power2.inOut' });
     gsap.to(bottom, {
       y: '100%',
-      duration: 1,
+      duration,
       ease: 'power2.inOut',
       onComplete: () => {
         splitEl.style.display = 'none';
-        this.playVideo();
+        // Encendido automático: se salta el video de intro. El callback de GSAP
+        // corre fuera de la zona de Angular: sin zone.run la vista no se refresca.
+        if (quick) this.zone.run(() => this.finishIntro());
+        else this.playVideo();
       }
     });
   }
@@ -216,20 +241,15 @@ export class AScreen implements AfterViewInit, OnDestroy {
   }
 
   onVideoEnded() {
-    if (!this.introDone) {
-      this.introDone = true;
-      const pending = this.nav.screen();
-      if (pending) {
-        this.openOption(pending);
-        return;
-      }
-    }
-    if (!this.showMenu) {
-      this.showMenu = true;
-      this.forceSilence = false; // al mostrar menú, permitir sonido si no está muteado
-      this.currentVideo = 'assets/videos/pikachu.mp4';
-      setTimeout(() => this.playVideo(), 0);
-    }
+    if (!this.introDone) this.finishIntro();
+  }
+
+  /** Fin del intro (o encendido rápido): abre la pantalla de la URL o el menú. */
+  private finishIntro() {
+    this.introDone = true;
+    const pending = this.nav.screen();
+    if (pending) this.openOption(pending);
+    else this.showMenuScreen();
   }
 
   // 🔹 Cargar componente dinámico según el servicio

@@ -14,7 +14,7 @@ battle mode driven by skill minigames.
 
 | Desktop | Tablet | Phone |
 | --- | --- | --- |
-| ![Desktop: Pokémon search with Charmander's detail](docs/screenshots/desktop.png) | ![Tablet: main menu](docs/screenshots/tablet.png) | ![Phone: panels stacked vertically](docs/screenshots/mobile.png) |
+| ![Desktop: Pokémon search with Charmander's detail](docs/screenshots/desktop.png) | ![Tablet: main menu](docs/screenshots/tablet.png) | ![Phone: search at real size](docs/screenshots/mobile.png) ![Phone: battle](docs/screenshots/mobile-battle.png) |
 
 ## Features
 
@@ -35,7 +35,12 @@ battle mode driven by skill minigames.
   letters) whose `miss` / `hit` / `perfect` result scales the damage. HP bars
   animate with GSAP and sound effects are generated with the Web Audio API
 - **Responsive**: the device is drawn on a fixed-size canvas that scales to the
-  viewport; on portrait phones the two panels stack vertically
+  viewport. On portrait phones, once it's on, screens A and B are shown at
+  real size, stacked, with a sticky "← Menú / Apagar" bar
+- **Visitor-friendly**: links like `/poked` or `/trainer` power the Pokédex on
+  by themselves; on `/` the ON button pulses with "Pulsa ON para empezar".
+  The profile shows the team with "¡A combatir!", and a battle without a team
+  offers "Ir a Trainer Info" and comes back after saving
 - **Cold-start aware**: requests to the API retry with backoff while the
   server wakes up, with a status banner instead of empty screens
 
@@ -73,6 +78,7 @@ npm start
 | `npm start` | Dev server on http://localhost:4200 (talks to `http://localhost:3000`) |
 | `npm run lint` | ESLint over TypeScript and templates |
 | `npm test` / `npm run test:ci` | Jasmine + Karma (watch / headless Chrome) |
+| `npm run e2e` | Playwright: guest → team → battle against the local stack (needs the backend running; creates a guest user) |
 | `npx ng build` | Production build into `dist/Pokefron/browser` (talks to the Render API) |
 
 ### Configuration

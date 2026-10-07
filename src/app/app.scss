@@ -25,3 +25,63 @@
   padding: 8px;
   box-sizing: border-box;
 }
+
+.stage-hidden {
+  display: none;
+}
+
+.phone-panel {
+  box-sizing: border-box;
+  min-height: 100vh;
+  padding: 0 8px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  background: #de092f;
+}
+
+.phone-panel[hidden] {
+  display: none;
+}
+
+.phone-bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 460px;
+  padding: 8px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #de092f;
+}
+
+.phone-title {
+  font: 700 18px/1 system-ui, sans-serif;
+  color: #fff;
+}
+
+.phone-btn {
+  min-height: 44px;
+  padding: 0 16px;
+  font: 700 16px/1 system-ui, sans-serif;
+  color: #101820;
+  background: #fff;
+  border: 2px solid #101820;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.phone-btn.off {
+  color: #fff;
+  background: #101820;
+}
+
+.phone-dock {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}

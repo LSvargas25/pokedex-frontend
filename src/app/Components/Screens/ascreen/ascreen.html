@@ -1,4 +1,4 @@
-<div class="screen">
+<div class="screen" appPhoneDock="a">
   <!-- Efecto de corte -->
   <div #blackSplit class="black-split">
     <div class="black-top"></div>
@@ -62,7 +62,12 @@
 <div *ngIf="showBackDiv" class="poket">
  <button
   *ngIf="showBack"
+  type="button"
   class="pokeball-button"
+  aria-label="Volver al menú"
   (click)="goBack()">
 </button>
 </div>
+
+<!-- Volver al menú con texto: la Pokéball sola no se entiende como "atrás". -->
+<button *ngIf="showBack" type="button" class="menu-back" (click)="goBack()">← Menú</button>

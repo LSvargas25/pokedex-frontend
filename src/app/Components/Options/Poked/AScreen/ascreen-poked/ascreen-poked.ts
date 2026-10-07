@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild, effect, signal, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { BattleService } from '../../../../../Services/Battle/battle-service';
 import { BattleStateService } from '../../../../../Services/Battle/battle-state';
 import { TrainerService } from '../../../../../Services/Trainer/trainer-service';
@@ -19,10 +20,13 @@ export class AscreenPoked implements OnInit {
   readonly battle = inject(BattleStateService);
   private readonly battleService = inject(BattleService);
   private readonly trainerService = inject(TrainerService);
+  private readonly router = inject(Router);
 
   @ViewChild('consoleBox') consoleBox?: ElementRef<HTMLDivElement>;
 
   readonly loading = signal(true);
+  /** El entrenador no tiene 3 Pokémon: se ofrece ir a armar el equipo. */
+  readonly needsTeam = signal(false);
 
   constructor() {
     // Autoscroll hacia la línea más nueva cada vez que el log cambia.
@@ -45,11 +49,13 @@ export class AscreenPoked implements OnInit {
   start(): void {
     this.battle.reset();
     this.loading.set(true);
+    this.needsTeam.set(false);
 
     this.trainerService.getMe().subscribe({
       next: (trainer) => {
         if (!trainer.team || trainer.team.length < 3) {
           this.battle.setNotice('Primero arma tu equipo en Trainer Info');
+          this.needsTeam.set(true);
           this.loading.set(false);
           return;
         }
@@ -63,6 +69,11 @@ export class AscreenPoked implements OnInit {
       },
       error: (err) => this.fail(friendlyHttpError(err, TRAINER_LOAD_ERROR)),
     });
+  }
+
+  /** Abre la selección de equipo y, al guardar, vuelve aquí (patrón returnUrl). */
+  goToTrainerInfo(): void {
+    void this.router.navigate(['/trainer'], { queryParams: { returnUrl: '/poked' } });
   }
 
   private fail(message: string): void {

@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ScreenService } from '../../../Services/Pokedex/On-OFF Service/screen-service';
+import { LayoutService } from '../../../Services/Layout/layout';
 import { AScreen } from '../../Screens/ascreen/ascreen';
 import { Bscreen } from '../../Screens/bscreen/bscreen/bscreen';
 
@@ -13,6 +14,7 @@ import { Bscreen } from '../../Screens/bscreen/bscreen/bscreen';
 })
 export class Pokedex {
   private screenService = inject(ScreenService);
+  private layout = inject(LayoutService);
 
   isOn = false;
 
@@ -20,6 +22,7 @@ constructor() {
     // Suscribirse al estado de la pantalla
     this.screenService.screenState$.subscribe(state => {
       this.isOn = state;
+      this.layout.deviceOn.set(state);
       if (this.isOn) {
         this.startScreen();
       } else {

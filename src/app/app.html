@@ -1,7 +1,8 @@
 <app-server-wakeup></app-server-wakeup>
+<app-guest-notice></app-guest-notice>
 
 @if (!onPage()) {
-<div class="stage" [style.height.px]="canvas().height * scale()">
+<div class="stage" [class.stage-hidden]="layout.docked()" [style.height.px]="canvas().height * scale()">
   <div
     class="canvas"
     [class.stacked]="stacked()"
@@ -15,7 +16,20 @@
     </div>
   </div>
 </div>
+
+<!-- Modo teléfono: las pantallas A y B se acoplan aquí (directiva PhoneDock). -->
+<section class="phone-panel" [hidden]="!layout.docked()" aria-label="Pokédex">
+  <header class="phone-bar">
+    @if (nav.screen()) {
+      <button type="button" class="phone-btn" (click)="nav.home()">← Menú</button>
+    } @else {
+      <span class="phone-title">Pokédex</span>
+    }
+    <button type="button" class="phone-btn off" (click)="powerOff()">Apagar</button>
+  </header>
+  <div class="phone-dock" [id]="dockIds.a"></div>
+  <div class="phone-dock" [id]="dockIds.b"></div>
+</section>
 }
 
-<app-guest-notice></app-guest-notice>
 <router-outlet></router-outlet>

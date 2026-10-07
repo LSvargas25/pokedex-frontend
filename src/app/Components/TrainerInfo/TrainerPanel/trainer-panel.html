@@ -1,12 +1,13 @@
 <div class="trainer-panel">
-
   <app-trainer-profile
     *ngIf="view() === 'profile'"
-    (chooseTeam)="view.set('team')"
+    [notice]="notice()"
+    (chooseTeam)="openTeam()"
   ></app-trainer-profile>
 
   <app-team-select
     *ngIf="view() === 'team'"
+    (saved)="onTeamSaved()"
     (done)="view.set('profile')"
   ></app-team-select>
 </div>

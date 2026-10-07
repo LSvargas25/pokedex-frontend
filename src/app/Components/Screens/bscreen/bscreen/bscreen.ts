@@ -4,6 +4,7 @@ import { gsap } from 'gsap';
 import { PokedService } from '../../../../Services/Screens/poked-screen-state';
 import { BScreenPoked } from '../../../Options/Poked/BScreen/bscreen-poked/bscreen-poked';
 import { CommonModule } from '@angular/common';
+import { PhoneDock } from '../../../../Directives/phone-dock';
 import { BScreenTrainer } from '../../../Options/TrainerInfo/BScreenTrainer/bscreen-trainer/bscreen-trainer';
 import { BScreenPokemonSearch } from '../../../Options/PokemonSearch/BScreenPokemonSearch/bscreen-pokemon-search/bscreen-pokemon-search';
 
@@ -12,7 +13,7 @@ import { BScreenPokemonSearch } from '../../../Options/PokemonSearch/BScreenPoke
   templateUrl: './bscreen.html',
   styleUrls: ['./bscreen.scss'],
   standalone: true,
-  imports: [CommonModule, BScreenPoked, BScreenTrainer, BScreenPokemonSearch]
+  imports: [CommonModule, BScreenPoked, BScreenTrainer, BScreenPokemonSearch, PhoneDock]
 })
 export class Bscreen implements AfterViewInit {
   private screenService = inject(ScreenService);

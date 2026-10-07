@@ -8,7 +8,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
-    "test:ci": "ng test --watch=false --browsers=ChromeHeadlessCI"
+    "test:ci": "ng test --watch=false --browsers=ChromeHeadlessCI",
+    "e2e": "playwright test"
   },
   "prettier": {
     "printWidth": 100,
@@ -40,6 +41,7 @@
     "@angular/build": "^20.3.5",
     "@angular/cli": "^20.3.5",
     "@angular/compiler-cli": "^20.3.0",
+    "@playwright/test": "^1.63.0",
     "@types/jasmine": "~5.1.0",
     "angular-eslint": "20.7.0",
     "eslint": "^9.39.1",
