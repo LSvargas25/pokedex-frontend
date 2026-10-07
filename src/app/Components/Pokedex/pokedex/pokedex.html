@@ -58,14 +58,18 @@
         <app-ascreen></app-ascreen>
       </div>
       <!-- green screen in the botton-->
-      <div class="ss"></div>
+      <div class="ss">
+        @if (!isOn) {
+          <p class="hint-text" role="status">Pulsa ON para empezar</p>
+        }
+      </div>
     </div>
 
   </div>
 
 
   <div class="controls"> <!-- Buttons for on and off-->
-    <button class="rectangle1" (click)="powerOn()">ON</button> <!-- on button-->
+    <button class="rectangle1" [class.hint]="!isOn" (click)="powerOn()">ON</button> <!-- on button-->
     <button class="rectangle2" (click)="powerOff()">OFF</button><!-- off button-->
   </div>
 

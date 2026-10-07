@@ -13,8 +13,16 @@ export class ScreenService {
   private resetSubject = new Subject<void>();
   reset$ = this.resetSubject.asObservable();
 
-  powerOn() {
+  /** El último encendido fue automático (link directo): sin intro largo. */
+  quickStart = false;
+
+  powerOn(options: { quick?: boolean } = {}) {
+    this.quickStart = options.quick ?? false;
     this.screenState.next(true);
+  }
+
+  get isOn(): boolean {
+    return this.screenState.value;
   }
 
   powerOff() {
