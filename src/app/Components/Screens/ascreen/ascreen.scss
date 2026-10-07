@@ -259,3 +259,23 @@ background-color: white;
 width: 80px;
 z-index: 999;
 }
+
+.menu-back {
+  position: absolute;
+  top: 437px;
+  left: 30px;
+  z-index: 999;
+  padding: 8px 14px;
+  font: 700 16px/1 system-ui, sans-serif;
+  color: #101820;
+  background: #fff;
+  border: 2px solid #101820;
+  border-radius: 999px;
+  box-shadow: 0 2px 0 #101820;
+  cursor: pointer;
+}
+
+.menu-back:hover,
+.menu-back:focus-visible {
+  background: #ffe066;
+}
