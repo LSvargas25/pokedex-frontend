@@ -14,7 +14,7 @@ battle mode driven by skill minigames.
 
 | Desktop | Tablet | Phone |
 | --- | --- | --- |
-| ![Desktop: Pokémon search with Charmander's detail](docs/screenshots/desktop.png) | ![Tablet: main menu](docs/screenshots/tablet.png) | ![Phone: panels stacked vertically](docs/screenshots/mobile.png) |
+| ![Desktop: Pokémon search with Charmander's detail](docs/screenshots/desktop.png) | ![Tablet: main menu](docs/screenshots/tablet.png) | ![Phone: search at real size](docs/screenshots/mobile.png) ![Phone: battle](docs/screenshots/mobile-battle.png) |
 
 ## Features
 
