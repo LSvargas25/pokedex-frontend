@@ -20,11 +20,18 @@ export class AuthService {
   /** true cuando hay una sesión activa. */
   readonly isLoggedIn = computed<boolean>(() => this.session() !== null);
 
+  /** true si la sesión es de un invitado (inicio anónimo de Supabase). */
+  readonly isAnonymous = computed<boolean>(() => this.currentUser()?.is_anonymous ?? false);
+
+  /** Se resuelve cuando ya se leyó la sesión guardada; el guard lo espera antes de decidir. */
+  readonly ready: Promise<void>;
+
   constructor() {
     // Hidratar la sesión al arrancar (por si el usuario ya estaba logueado).
-    void supabase.auth.getSession().then(({ data }) => {
-      this.session.set(data.session);
-    });
+    this.ready = supabase.auth
+      .getSession()
+      .then(({ data }) => this.session.set(data.session))
+      .catch(() => this.session.set(null));
 
     // Mantener la sesión cacheada al día ante cualquier cambio de estado.
     supabase.auth.onAuthStateChange((_event, session) => {
@@ -52,8 +59,22 @@ export class AuthService {
     });
   }
 
+  /** Inicio de sesión anónimo: entra al juego sin cuenta. */
+  signInAsGuest() {
+    return supabase.auth.signInAnonymously();
+  }
+
   signOut() {
     return supabase.auth.signOut();
+  }
+
+  /**
+   * Borra solo la sesión de este navegador, sin llamar al servidor.
+   * Se usa cuando el backend responde 401 (token vencido o revocado).
+   */
+  async signOutLocal(): Promise<void> {
+    await supabase.auth.signOut({ scope: 'local' });
+    this.session.set(null);
   }
 
   /** access_token de la sesión actual, o null. Pensado para el interceptor. */

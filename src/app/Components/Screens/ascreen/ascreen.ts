@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, AfterViewInit, Type, OnDestroy, inject } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewInit, Type, OnDestroy, effect, inject, untracked } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import gsap from 'gsap';
@@ -9,6 +9,8 @@ import { AScreenPokemonSearch } from '../../Options/PokemonSearch/AScreenPokemon
 import { TrainerPanel } from '../../TrainerInfo/TrainerPanel/trainer-panel';
 import { Settings } from '../../Options/Settings/Settings/settings';
 import { PokemonSelected } from '../../../Services/Options/SearchPokemon/PokemonSelected/pokemon-selected';
+import { AuthForm } from '../../Auth/AuthForm/auth-form';
+import { DeviceNavigation, DeviceScreen } from '../../../Services/Navigation/device-navigation';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 @Component({
@@ -22,6 +24,7 @@ export class AScreen implements AfterViewInit, OnDestroy {
   private screenService = inject(ScreenService);
   private pokedService = inject(PokedService);
   private pokemonSelected = inject(PokemonSelected);
+  private nav = inject(DeviceNavigation);
 
   @ViewChild('videoPlayer') videoPlayer!: ElementRef<HTMLVideoElement>;
   @ViewChild('blackSplit') blackSplit!: ElementRef<HTMLDivElement>;
@@ -31,7 +34,10 @@ export class AScreen implements AfterViewInit, OnDestroy {
   showBackDiv = false
   currentComponent: Type<unknown> | null = null; // componente dinámico
   currentVideo = 'assets/videos/intro.mp4';
-  options = ['Poked', 'Pokémon Search', 'Trainer Info', 'Settings'];
+  options: DeviceScreen[] = ['Poked', 'Pokémon Search', 'Trainer Info', 'Settings'];
+
+  /** El intro ya terminó: desde aquí la pantalla sigue a la URL. */
+  private introDone = false;
   showBack = false;
 
   volume = 0.3;
@@ -65,6 +71,19 @@ export class AScreen implements AfterViewInit, OnDestroy {
     this.pokedService.menu$
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => this.goBack());
+
+    // La URL manda: /poked, /trainer, /login... abren su pantalla; "/" vuelve al menú.
+    effect(() => {
+      const screen = this.nav.screen();
+      untracked(() => this.applyScreen(screen));
+    });
+  }
+
+  private applyScreen(screen: DeviceScreen | null) {
+    // Apagado o en pleno intro: se aplica cuando termine (onVideoEnded).
+    if (!this.isOn || !this.introDone) return;
+    if (screen) this.openOption(screen);
+    else if (this.currentComponent) this.showMenuScreen();
   }
 
   ngAfterViewInit() {
@@ -107,6 +126,8 @@ export class AScreen implements AfterViewInit, OnDestroy {
 
   /** 🔴 Animación de apagado (cerrar cortina) */
   private stopScreen() {
+    this.introDone = false;
+    this.nav.home();
     this.showBackDiv = false;
     this.currentComponent = null;
     this.currentVideo = '';
@@ -195,6 +216,14 @@ export class AScreen implements AfterViewInit, OnDestroy {
   }
 
   onVideoEnded() {
+    if (!this.introDone) {
+      this.introDone = true;
+      const pending = this.nav.screen();
+      if (pending) {
+        this.openOption(pending);
+        return;
+      }
+    }
     if (!this.showMenu) {
       this.showMenu = true;
       this.forceSilence = false; // al mostrar menú, permitir sonido si no está muteado
@@ -218,6 +247,9 @@ export class AScreen implements AfterViewInit, OnDestroy {
       case 'Settings':
         this.currentComponent = Settings;
         break;
+      case 'Login':
+        this.currentComponent = AuthForm;
+        break;
       default:
         this.currentComponent = null;
         break;
@@ -228,7 +260,12 @@ export class AScreen implements AfterViewInit, OnDestroy {
     this.currentComponent = null;
   }
 
-  onOptionClick(option: string) {
+  /** Click en el menú: navega, y la URL abre la pantalla (pasando por el guard). */
+  onOptionClick(option: DeviceScreen) {
+    this.nav.open(option);
+  }
+
+  private openOption(option: DeviceScreen) {
     this.showMenu = false;
     this.showBack = true;
     this.showBackDiv = true;
@@ -263,10 +300,19 @@ export class AScreen implements AfterViewInit, OnDestroy {
         this.currentComponent = Settings;
         this.pokedService.setScreens('Settings', null);
         break;
+      case 'Login':
+        this.currentComponent = AuthForm;
+        this.pokedService.setScreens('Login', 'BScreenTrainer');
+        break;
     }
   }
 
+  /** Botón Pokéball / fin de batalla: volver al menú es volver a "/". */
   goBack() {
+    this.nav.home();
+  }
+
+  private showMenuScreen() {
     this.pokedService.reset();
     this.pokemonSelected.reset();
     this.currentComponent = null;

@@ -1,6 +1,9 @@
-import { Component, computed, HostListener, inject, signal } from '@angular/core';
+import { Component, computed, effect, HostListener, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
+import { AuthService } from './Services/Auth/auth-service';
+import { OAUTH_RETURN_URL_KEY } from './Components/Auth/AuthForm/auth-form';
+import { safeReturnUrl } from './Services/Navigation/device-navigation';
 import { Pokedex } from './Components/Pokedex/pokedex/pokedex';
 import { Ligths } from './Components/ligths/ligths/ligths';
 import { ServerWakeup } from './Components/ServerWakeup/server-wakeup';
@@ -40,6 +43,15 @@ export class App {
     inject(HttpClient)
       .get(`${environment.apiBaseUrl}/health`)
       .subscribe({ error: () => undefined });
+
+    // Al volver de Google, retomar la pantalla que se pidió antes del login.
+    const auth = inject(AuthService);
+    const router = inject(Router);
+    effect(() => {
+      if (!auth.isLoggedIn()) return;
+      const pending = takeOAuthReturnUrl();
+      if (pending) void router.navigateByUrl(safeReturnUrl(pending));
+    });
   }
 
   @HostListener('window:resize')
@@ -49,5 +61,16 @@ export class App {
 
   private measure() {
     return { width: document.documentElement.clientWidth, height: window.innerHeight };
+  }
+}
+
+/** Lee y borra el returnUrl guardado antes de ir a Google (null si no hay). */
+function takeOAuthReturnUrl(): string | null {
+  try {
+    const url = sessionStorage.getItem(OAUTH_RETURN_URL_KEY);
+    sessionStorage.removeItem(OAUTH_RETURN_URL_KEY);
+    return url;
+  } catch {
+    return null;
   }
 }
