@@ -4,10 +4,13 @@
   </ng-container>
 
   <ng-template #runtime>
-    <p class="notice error" *ngIf="errorMsg() as err">{{ err }}</p>
-    <p class="notice" *ngIf="!errorMsg() && loading()">Iniciando batalla…</p>
+    <div class="notice error" role="alert" *ngIf="battle.loadError() as err">
+      <p>{{ err }}</p>
+      <button type="button" class="retry" (click)="start()">Reintentar</button>
+    </div>
+    <p class="notice" *ngIf="!battle.loadError() && loading()">Iniciando batalla…</p>
 
-    <div #consoleBox class="log" *ngIf="!errorMsg() && !loading()">
+    <div #consoleBox class="log" *ngIf="!battle.loadError() && !loading()">
       <p class="line" *ngFor="let line of battle.log()">{{ line }}</p>
     </div>
   </ng-template>

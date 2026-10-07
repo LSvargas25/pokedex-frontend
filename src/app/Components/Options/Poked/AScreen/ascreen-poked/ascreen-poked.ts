@@ -3,6 +3,10 @@ import { Component, ElementRef, OnInit, ViewChild, effect, signal, inject } from
 import { BattleService } from '../../../../../Services/Battle/battle-service';
 import { BattleStateService } from '../../../../../Services/Battle/battle-state';
 import { TrainerService } from '../../../../../Services/Trainer/trainer-service';
+import { friendlyHttpError } from '../../../../../Services/Http/friendly-error';
+
+export const TRAINER_LOAD_ERROR = 'No pudimos cargar tu entrenador. Intenta de nuevo';
+export const BATTLE_START_ERROR = 'No pudimos iniciar el combate. Intenta de nuevo';
 
 @Component({
   selector: 'app-ascreen-poked',
@@ -19,7 +23,6 @@ export class AscreenPoked implements OnInit {
   @ViewChild('consoleBox') consoleBox?: ElementRef<HTMLDivElement>;
 
   readonly loading = signal(true);
-  readonly errorMsg = signal<string | null>(null);
 
   constructor() {
     // Autoscroll hacia la línea más nueva cada vez que el log cambia.
@@ -35,9 +38,13 @@ export class AscreenPoked implements OnInit {
   }
 
   ngOnInit(): void {
+    this.start();
+  }
+
+  /** Carga el entrenador y arranca el combate. También es el "Reintentar". */
+  start(): void {
     this.battle.reset();
     this.loading.set(true);
-    this.errorMsg.set(null);
 
     this.trainerService.getMe().subscribe({
       next: (trainer) => {
@@ -51,23 +58,16 @@ export class AscreenPoked implements OnInit {
             this.battle.setStart(res);
             this.loading.set(false);
           },
-          error: (err) => {
-            this.errorMsg.set(this.readError(err, 'No se pudo iniciar la batalla.'));
-            this.loading.set(false);
-          },
+          error: (err) => this.fail(friendlyHttpError(err, BATTLE_START_ERROR)),
         });
       },
-      error: (err) => {
-        this.errorMsg.set(this.readError(err, 'No se pudo cargar tu entrenador.'));
-        this.loading.set(false);
-      },
+      error: (err) => this.fail(friendlyHttpError(err, TRAINER_LOAD_ERROR)),
     });
   }
 
-  private readError(
-    err: { error?: { message?: string; error?: string }; message?: string } | null,
-    fallback: string
-  ): string {
-    return err?.error?.message || err?.error?.error || err?.message || fallback;
+  private fail(message: string): void {
+    // La pantalla B también lo ve: deja de mostrar "Preparando combate…".
+    this.battle.loadError.set(message);
+    this.loading.set(false);
   }
 }

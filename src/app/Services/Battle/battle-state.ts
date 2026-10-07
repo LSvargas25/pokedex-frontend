@@ -28,6 +28,8 @@ export class BattleStateService {
   readonly rewards = signal<BattleRewards | null>(null);
   /** Mensaje de bloqueo para la pantalla A (ej. equipo incompleto). */
   readonly notice = signal<string | null>(null);
+  /** No se pudo cargar el entrenador o iniciar el combate (A muestra Reintentar). */
+  readonly loadError = signal<string | null>(null);
 
   readonly playerActive = computed<Fighter | null>(
     () => this.playerTeam()[this.playerActiveIndex()] ?? null
@@ -49,6 +51,7 @@ export class BattleStateService {
     this.status.set('ongoing');
     this.rewards.set(null);
     this.notice.set(null);
+    this.loadError.set(null);
   }
 
   setStart(res: BattleStartResponse): void {

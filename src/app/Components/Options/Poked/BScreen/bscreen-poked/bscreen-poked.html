@@ -86,5 +86,9 @@
 </div>
 
 <ng-template #waiting>
-  <p class="waiting">{{ battle.notice() || 'Preparando combate…' }}</p>
+  @if (battle.loadError()) {
+    <p class="waiting error">No se pudo preparar el combate.</p>
+  } @else {
+    <p class="waiting">{{ battle.notice() || 'Preparando combate…' }}</p>
+  }
 </ng-template>
