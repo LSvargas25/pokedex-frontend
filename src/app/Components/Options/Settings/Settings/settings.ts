@@ -1,13 +1,25 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
+import { AuthService } from '../../../../Services/Auth/auth-service';
 
 @Component({
   selector: 'app-settings',
   imports: [CommonModule],
-    standalone:true,
+  standalone: true,
   templateUrl: './settings.html',
-  styleUrl: './settings.scss'
+  styleUrl: './settings.scss',
 })
 export class Settings {
+  private readonly auth = inject(AuthService);
 
+  /** Cómo se muestra la sesión actual: correo, "Invitado" o null sin sesión. */
+  readonly sessionLabel = computed(() => {
+    const user = this.auth.currentUser();
+    if (!user) return null;
+    return user.is_anonymous ? 'Invitado' : (user.email ?? 'Entrenador');
+  });
+
+  signOut(): void {
+    void this.auth.signOut();
+  }
 }

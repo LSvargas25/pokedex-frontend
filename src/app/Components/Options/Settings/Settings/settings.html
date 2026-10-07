@@ -1,1 +1,12 @@
-<p>settings works!</p>
+<div class="settings">
+  <h2>Ajustes</h2>
+
+  @if (sessionLabel(); as label) {
+    <p>Sesión iniciada como <strong>{{ label }}</strong></p>
+    <button type="button" class="link" (click)="signOut()">Cerrar sesión</button>
+  } @else {
+    <p>No has iniciado sesión.</p>
+  }
+
+  <p class="hint">El volumen se ajusta desde el menú principal.</p>
+</div>
