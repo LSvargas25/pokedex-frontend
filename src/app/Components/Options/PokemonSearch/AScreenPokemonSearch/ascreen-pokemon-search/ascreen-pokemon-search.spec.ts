@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { testProviders } from '../../../../../../testing/test-providers';
 
 import { AScreenPokemonSearch } from './ascreen-pokemon-search';
 
@@ -8,7 +9,8 @@ describe('AScreenPokemonSearch', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AScreenPokemonSearch]
+      imports: [AScreenPokemonSearch],
+      providers: testProviders
     })
     .compileComponents();
 

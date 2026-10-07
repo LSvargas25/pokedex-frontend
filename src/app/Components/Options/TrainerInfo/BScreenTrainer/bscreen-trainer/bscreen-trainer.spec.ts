@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { testProviders } from '../../../../../../testing/test-providers';
 
 import { BScreenTrainer } from './bscreen-trainer';
 
@@ -8,7 +9,8 @@ describe('BScreenTrainer', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BScreenTrainer]
+      imports: [BScreenTrainer],
+      providers: testProviders
     })
     .compileComponents();
 
