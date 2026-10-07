@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Routes } from '@angular/router';
+import { PrivacyPage } from './Components/Privacy/privacy-page';
 import { authGuard } from './Guards/auth-guard';
 import { DeviceScreen } from './Services/Navigation/device-navigation';
 
@@ -20,5 +21,7 @@ export const routes: Routes = [
   { path: 'trainer', component: DeviceRoute, data: screen('Trainer Info'), canActivate: [authGuard] },
   { path: 'settings', component: DeviceRoute, data: screen('Settings') },
   { path: 'login', component: DeviceRoute, data: screen('Login') },
+  // Página normal, fuera del Pokédex (App oculta el dispositivo con data.page).
+  { path: 'privacy', component: PrivacyPage, data: { page: true } },
   { path: '**', redirectTo: '' },
 ];

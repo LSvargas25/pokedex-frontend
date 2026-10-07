@@ -1,5 +1,6 @@
 <app-server-wakeup></app-server-wakeup>
 
+@if (!onPage()) {
 <div class="stage" [style.height.px]="canvas().height * scale()">
   <div
     class="canvas"
@@ -14,5 +15,7 @@
     </div>
   </div>
 </div>
+}
 
+<app-guest-notice></app-guest-notice>
 <router-outlet></router-outlet>

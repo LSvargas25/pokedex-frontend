@@ -1,6 +1,9 @@
 import { Component, computed, effect, HostListener, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Router, RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { filter, map } from 'rxjs';
+import { GuestNotice } from './Components/GuestNotice/guest-notice';
 import { AuthService } from './Services/Auth/auth-service';
 import { OAUTH_RETURN_URL_KEY } from './Components/Auth/AuthForm/auth-form';
 import { safeReturnUrl } from './Services/Navigation/device-navigation';
@@ -20,12 +23,23 @@ const STACK_BELOW_PX = 700;
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Pokedex, Ligths, ServerWakeup],
+  imports: [RouterOutlet, Pokedex, Ligths, ServerWakeup, GuestNotice],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
 export class App {
   protected readonly title = signal('Pokédex');
+
+  private readonly router = inject(Router);
+
+  /** true en páginas normales (ej. /privacy): se muestra la página en vez del Pokédex. */
+  protected readonly onPage = toSignal(
+    this.router.events.pipe(
+      filter((e) => e instanceof NavigationEnd),
+      map(() => this.isPageRoute())
+    ),
+    { initialValue: false }
+  );
 
   private readonly viewport = signal(this.measure());
 
@@ -46,17 +60,22 @@ export class App {
 
     // Al volver de Google, retomar la pantalla que se pidió antes del login.
     const auth = inject(AuthService);
-    const router = inject(Router);
     effect(() => {
       if (!auth.isLoggedIn()) return;
       const pending = takeOAuthReturnUrl();
-      if (pending) void router.navigateByUrl(safeReturnUrl(pending));
+      if (pending) void this.router.navigateByUrl(safeReturnUrl(pending));
     });
   }
 
   @HostListener('window:resize')
   protected onResize(): void {
     this.viewport.set(this.measure());
+  }
+
+  private isPageRoute(): boolean {
+    let route = this.router.routerState.snapshot.root;
+    while (route.firstChild) route = route.firstChild;
+    return route.data['page'] === true;
   }
 
   private measure() {

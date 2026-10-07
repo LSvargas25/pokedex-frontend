@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, effect, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../Services/Auth/auth-service';
 import { translateAuthError } from '../../../Services/Auth/auth-errors';
 import { safeReturnUrl } from '../../../Services/Navigation/device-navigation';
@@ -19,7 +19,7 @@ export const OAUTH_RETURN_URL_KEY = 'pokedex.returnUrl';
 @Component({
   selector: 'app-auth-form',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './auth-form.html',
   styleUrl: './auth-form.scss',
 })

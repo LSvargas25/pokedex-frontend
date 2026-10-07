@@ -1,0 +1,52 @@
+<main class="privacy">
+  <a routerLink="/" class="back">← Volver al Pokédex</a>
+
+  <h1>Política de privacidad</h1>
+  <p class="updated">Última actualización: {{ updated }}</p>
+
+  <p>
+    Pokédex es un proyecto personal de portafolio. Esta página explica qué datos guarda
+    y para qué.
+  </p>
+
+  <h2>Qué datos guardamos</h2>
+  <ul>
+    <li><strong>Correo electrónico</strong>, si creas una cuenta con correo o con Google.</li>
+    <li><strong>Nombre de entrenador</strong>: el que eliges al registrarte o el nombre de tu cuenta de Google.</li>
+    <li>
+      <strong>Progreso del entrenador</strong>: nivel, experiencia, victorias, derrotas y tu
+      equipo de Pokémon.
+    </li>
+  </ul>
+  <p>
+    Si juegas como invitado no pedimos correo ni nombre: solo se guarda el progreso, ligado a
+    una sesión anónima que se pierde al cerrar sesión.
+  </p>
+
+  <h2>De dónde vienen</h2>
+  <p>
+    Las cuentas y sesiones las gestiona <strong>Supabase</strong> (autenticación y base de
+    datos). Si entras con <strong>Google</strong>, Google nos comparte tu correo y tu nombre
+    para crear la cuenta; no recibimos tu contraseña de Google ni acceso a otros datos.
+  </p>
+
+  <h2>Para qué los usamos</h2>
+  <p>
+    Solo para que puedas iniciar sesión y conservar tu progreso en el juego. No enviamos
+    correos de marketing.
+  </p>
+
+  <h2>No vendemos tus datos</h2>
+  <p>No vendemos, alquilamos ni compartimos tus datos con terceros con fines comerciales.</p>
+
+  <h2>Borrar tus datos</h2>
+  <p>
+    Escríbenos y eliminamos tu cuenta y tu progreso:
+    <a [href]="'mailto:' + contactEmail">{{ contactEmail }}</a>.
+  </p>
+
+  <h2>Contacto</h2>
+  <p>
+    Dudas sobre esta política: <a [href]="'mailto:' + contactEmail">{{ contactEmail }}</a>.
+  </p>
+</main>

@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../../Services/Auth/auth-service';
 
 @Component({
   selector: 'app-settings',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   standalone: true,
   templateUrl: './settings.html',
   styleUrl: './settings.scss',
