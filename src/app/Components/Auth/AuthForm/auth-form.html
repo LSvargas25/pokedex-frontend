@@ -1,5 +1,17 @@
 <div class="auth">
-  <h2>{{ mode() === 'login' ? 'Iniciar sesión' : 'Crear cuenta' }}</h2>
+  @if (returnUrl) {
+    <p class="reason">Inicia sesión para jugar</p>
+  }
+
+  <button type="button" class="primary guest" [disabled]="loading()" (click)="playAsGuest()">
+    Jugar como invitado
+  </button>
+
+  <div class="divider"><span>o con tu cuenta</span></div>
+
+  <button type="button" class="google" [disabled]="loading()" (click)="continueWithGoogle()">
+    <span class="g-icon">G</span> Continuar con Google
+  </button>
 
   <form (ngSubmit)="submit()">
     <input
@@ -7,6 +19,7 @@
       type="text"
       name="username"
       placeholder="Nombre de entrenador"
+      aria-label="Nombre de entrenador"
       autocomplete="username"
       [(ngModel)]="username"
     />
@@ -14,6 +27,7 @@
       type="email"
       name="email"
       placeholder="Email"
+      aria-label="Email"
       autocomplete="email"
       [(ngModel)]="email"
     />
@@ -21,34 +35,20 @@
       type="password"
       name="password"
       placeholder="Contraseña"
+      aria-label="Contraseña"
       [attr.autocomplete]="mode() === 'login' ? 'current-password' : 'new-password'"
       [(ngModel)]="password"
     />
 
-    <p class="msg error" *ngIf="errorMsg()">{{ errorMsg() }}</p>
-    <p class="msg info" *ngIf="infoMsg()">{{ infoMsg() }}</p>
+    <p class="msg error" role="alert" *ngIf="errorMsg()">{{ errorMsg() }}</p>
+    <p class="msg info" role="status" *ngIf="infoMsg()">{{ infoMsg() }}</p>
 
-    <button type="submit" class="primary" [disabled]="loading()">
-      {{ loading() ? '...' : mode() === 'login' ? 'Entrar' : 'Registrarme' }}
+    <button type="submit" class="secondary" [disabled]="loading()">
+      {{ loading() ? '...' : mode() === 'login' ? 'Entrar con correo' : 'Crear cuenta' }}
     </button>
   </form>
 
   <button type="button" class="link" (click)="toggleMode()">
-    {{
-      mode() === 'login'
-        ? '¿No tienes cuenta? Crear una'
-        : '¿Ya tienes cuenta? Iniciar sesión'
-    }}
-  </button>
-
-  <div class="divider"><span>o</span></div>
-
-  <button
-    type="button"
-    class="google"
-    [disabled]="loading()"
-    (click)="continueWithGoogle()"
-  >
-    <span class="g-icon">G</span> Continuar con Google
+    {{ mode() === 'login' ? '¿No tienes cuenta? Crear una' : '¿Ya tienes cuenta? Iniciar sesión' }}
   </button>
 </div>
