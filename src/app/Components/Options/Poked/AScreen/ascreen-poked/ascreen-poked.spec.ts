@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpTestingController } from '@angular/common/http/testing';
+import { Router } from '@angular/router';
 import { testProviders } from '../../../../../../testing/test-providers';
 import { environment } from '../../../../../../environments/environment';
 import { BattleStateService } from '../../../../../Services/Battle/battle-state';
@@ -51,5 +52,19 @@ describe('AscreenPoked', () => {
     fixture.detectChanges();
 
     expect(text()).toContain('Primero arma tu equipo en Trainer Info');
+  });
+
+  it('"Ir a Trainer Info" abre /trainer con returnUrl=/poked', () => {
+    const router = TestBed.inject(Router);
+    spyOn(router, 'navigate').and.resolveTo(true);
+    backend.expectOne(meUrl).flush({ team: [] });
+    fixture.detectChanges();
+
+    const button = [...(fixture.nativeElement as HTMLElement).querySelectorAll('button')].find(
+      (b) => b.textContent?.includes('Ir a Trainer Info')
+    ) as HTMLButtonElement;
+    button.click();
+
+    expect(router.navigate).toHaveBeenCalledWith(['/trainer'], { queryParams: { returnUrl: '/poked' } });
   });
 });
