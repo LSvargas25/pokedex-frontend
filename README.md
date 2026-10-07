@@ -20,8 +20,13 @@ battle mode driven by skill minigames.
 
 - **Browse and search** Pokémon by name, type and generation; screen B shows
   the detail card (types, size, abilities, weaknesses, evolution line)
-- **Trainer accounts** with email/password or *Continuar con Google*
-  (Supabase Auth); the session is restored on reload
+- **Play without an account**: *Jugar como invitado* (Supabase anonymous
+  sign-in) is the main option on the login; email/password and *Continuar con
+  Google* are there too. The session is restored on reload
+- **Protected routes**: `/poked` (battle) and `/trainer` need a session; without
+  one the guard opens `/login?returnUrl=...` and returns there after signing in
+- **Friendly errors**: Spanish messages with *Reintentar*, a 401 clears the
+  local session and asks to log in again, and Supabase errors are translated
 - **Trainer profile**: level, XP bar, win/loss record
 - **Team selection**: pick 3 Pokémon; stronger ones unlock as the trainer
   levels up (enforced by the backend too)
@@ -41,7 +46,7 @@ battle mode driven by skill minigames.
 | Frontend | Angular 20 (standalone components, signals), TypeScript, RxJS, GSAP, SCSS |
 | Auth | Supabase Auth (`@supabase/supabase-js`) |
 | Backend | [pokedex-backend](https://github.com/LSvargas25/pokedex-backend): Node.js + Express caching proxy over [PokeAPI](https://pokeapi.co/), trainer data in Supabase (Postgres) |
-| Quality | ESLint (angular-eslint), GitHub Actions CI (lint + build) |
+| Quality | ESLint (angular-eslint), Jasmine + Karma, GitHub Actions CI (lint + build + tests) |
 | Hosting | Render (static site + web service) |
 
 ## Running locally
@@ -67,6 +72,7 @@ npm start
 | --- | --- |
 | `npm start` | Dev server on http://localhost:4200 (talks to `http://localhost:3000`) |
 | `npm run lint` | ESLint over TypeScript and templates |
+| `npm test` / `npm run test:ci` | Jasmine + Karma (watch / headless Chrome) |
 | `npx ng build` | Production build into `dist/Pokefron/browser` (talks to the Render API) |
 
 ### Configuration
@@ -83,11 +89,26 @@ by design; row-level security in Supabase protects the data. Google sign-in
 additionally needs the Google provider enabled in the Supabase dashboard
 (Authentication → Providers → Google).
 
+### Routes
+
+| Route | Login | Screen |
+| --- | --- | --- |
+| `/` | – | Main menu |
+| `/search` | – | Pokémon Search |
+| `/poked` | required | Battle |
+| `/trainer` | required | Trainer profile and team |
+| `/settings` | – | Session and links |
+| `/login` | – | Guest / Google / email |
+| `/privacy` | – | Privacy policy (a normal page, outside the device) |
+
+The device screens follow the URL, so links and the browser's back button work.
+
 ### Trying the flow
 
 1. Press **ON**, wait for the intro, then pick **Pokémon Search** and click a
    Pokémon to see its card on the right screen.
-2. Open **Trainer Info**, create an account (or continue with Google) and sign in.
+2. Open **Trainer Info**: without a session you land on the login. Choose
+   **Jugar como invitado** (or Google / email).
 3. Click **Elegir equipo**, choose 3 unlocked Pokémon and save.
 4. Back in the menu, choose **Poked**: pick a move, play its minigame and watch
    the turn resolve. Wins grant XP; level-ups unlock new Pokémon.
