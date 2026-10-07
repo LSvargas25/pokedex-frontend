@@ -4,6 +4,10 @@ import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { filter, map } from 'rxjs';
 import { GuestNotice } from './Components/GuestNotice/guest-notice';
+import { LayoutService } from './Services/Layout/layout';
+import { DeviceNavigation } from './Services/Navigation/device-navigation';
+import { ScreenService } from './Services/Pokedex/On-OFF Service/screen-service';
+import { PHONE_DOCK_IDS } from './Directives/phone-dock';
 import { AuthService } from './Services/Auth/auth-service';
 import { OAUTH_RETURN_URL_KEY } from './Components/Auth/AuthForm/auth-form';
 import { safeReturnUrl } from './Services/Navigation/device-navigation';
@@ -31,6 +35,10 @@ export class App {
   protected readonly title = signal('Pokédex');
 
   private readonly router = inject(Router);
+  protected readonly layout = inject(LayoutService);
+  protected readonly nav = inject(DeviceNavigation);
+  private readonly screenService = inject(ScreenService);
+  protected readonly dockIds = PHONE_DOCK_IDS;
 
   /** true en páginas normales (ej. /privacy): se muestra la página en vez del Pokédex. */
   protected readonly onPage = toSignal(
@@ -58,6 +66,9 @@ export class App {
       .get(`${environment.apiBaseUrl}/health`)
       .subscribe({ error: () => undefined });
 
+    // Celular vertical: con el Pokédex encendido, las pantallas se ven a tamaño real.
+    effect(() => this.layout.phone.set(this.stacked()));
+
     // Al volver de Google, retomar la pantalla que se pidió antes del login.
     const auth = inject(AuthService);
     effect(() => {
@@ -65,6 +76,10 @@ export class App {
       const pending = takeOAuthReturnUrl();
       if (pending) void this.router.navigateByUrl(safeReturnUrl(pending));
     });
+  }
+
+  protected powerOff(): void {
+    this.screenService.powerOff();
   }
 
   @HostListener('window:resize')

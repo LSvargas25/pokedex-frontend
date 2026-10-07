@@ -30,6 +30,18 @@ import { AuthService } from '../../Services/Auth/auth-service';
       border-radius: 999px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     }
+
+    /* Celular: fijo abajo tapaba los botones del combate; va arriba, en el flujo. */
+    @media (max-width: 699px) {
+      .guest-notice {
+        position: static;
+        transform: none;
+        max-width: none;
+        border-radius: 0;
+        border-width: 0 0 1px;
+        box-shadow: none;
+      }
+    }
   `,
 })
 export class GuestNotice {

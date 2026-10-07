@@ -22,3 +22,45 @@ body {
     top: 1620px !important;
   }
 }
+
+/*
+ * Modo teléfono (PhoneDock): las pantallas salen del lienzo escalado y se ven a
+ * tamaño real. Se anulan las posiciones absolutas que tienen dentro del Pokédex.
+ */
+.phone-dock .screen,
+.phone-dock .screenb {
+  position: relative !important;
+  inset: auto !important;
+  box-sizing: border-box;
+  width: min(360px, 100%) !important;
+  border: 4px solid #101820 !important;
+  border-radius: 12px !important;
+}
+
+.phone-dock .screen {
+  height: 340px !important;
+}
+
+.phone-dock .screenb {
+  width: min(460px, 100%) !important;
+  height: min(460px, 110vw) !important;
+}
+
+/* Alturas según lo que muestra cada pantalla (en teléfono el espacio vertical manda). */
+.phone-dock .screen:has(app-ascreen-poked) {
+  height: 150px !important;
+}
+
+.phone-dock .screen:has(app-team-select) {
+  height: min(480px, 65vh) !important;
+}
+
+.phone-dock .screenb:has(app-bscreen-trainer) {
+  height: 240px !important;
+}
+
+/* El nombre grande de la ficha está pensado para 460 px de ancho. */
+.phone-dock .InfoRowName {
+  font-size: clamp(20px, 8vw, 36px) !important;
+  overflow-wrap: anywhere;
+}

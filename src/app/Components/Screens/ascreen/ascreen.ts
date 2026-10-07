@@ -11,12 +11,13 @@ import { Settings } from '../../Options/Settings/Settings/settings';
 import { PokemonSelected } from '../../../Services/Options/SearchPokemon/PokemonSelected/pokemon-selected';
 import { AuthForm } from '../../Auth/AuthForm/auth-form';
 import { DeviceNavigation, DeviceScreen } from '../../../Services/Navigation/device-navigation';
+import { PhoneDock } from '../../../Directives/phone-dock';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'app-ascreen',
   standalone: true,
-  imports: [CommonModule, FormsModule, AscreenPoked,Settings],
+  imports: [CommonModule, FormsModule, AscreenPoked, Settings, PhoneDock],
   templateUrl: './ascreen.html',
   styleUrls: ['./ascreen.scss']
 })
