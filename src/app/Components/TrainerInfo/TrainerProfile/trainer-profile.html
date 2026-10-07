@@ -1,6 +1,8 @@
 <div class="profile">
   <ng-container *ngIf="!loading(); else loadingTpl">
     <ng-container *ngIf="trainer() as t; else errorTpl">
+      <p class="saved" role="status" *ngIf="notice">{{ notice }}</p>
+
       <h2>{{ t.username }}</h2>
       <p class="level">Nivel {{ t.level }}</p>
 
@@ -15,14 +17,35 @@
         <span class="losses">{{ t.losses }}D</span>
       </p>
 
+      <section class="team" aria-label="Tu equipo">
+        @if (team().length) {
+          <ul class="team-list">
+            @for (p of team(); track p.name) {
+              <li class="member">
+                @if (p.sprite) {
+                  <img [src]="p.sprite" [alt]="p.name" width="48" height="48" />
+                }
+                <span class="member-name">{{ p.name }}</span>
+              </li>
+            }
+          </ul>
+        } @else {
+          <p class="empty-team">Aún no tienes equipo</p>
+        }
+      </section>
+
+      @if (teamComplete()) {
+        <button type="button" class="primary battle" (click)="goToBattle()">¡A combatir!</button>
+        <button type="button" class="secondary" (click)="chooseTeam.emit()">Cambiar equipo</button>
+      } @else {
+        <button type="button" class="primary" (click)="chooseTeam.emit()">Elegir equipo</button>
+      }
+
       <p class="next-unlock" *ngIf="t.nextUnlock as n">
         Próximo desbloqueo en nivel {{ n.level }}:
         <span class="names">{{ n.pokemonNames.join(', ') }}</span>
       </p>
 
-      <button type="button" class="primary" (click)="chooseTeam.emit()">
-        Elegir equipo
-      </button>
       <button type="button" class="link" (click)="signOut()">Cerrar sesión</button>
     </ng-container>
   </ng-container>

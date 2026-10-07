@@ -92,6 +92,80 @@ button {
   letter-spacing: 0.5px;
 }
 
+.primary.battle {
+  flex: none;
+  height: 34px;
+  font-size: 13px;
+  background: #1d6b3b;
+}
+
+.secondary {
+  flex: none;
+  width: 100%;
+  height: 28px;
+  border: 2px solid #000;
+  border-radius: 6px;
+  background: #fff;
+  color: #101820;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.saved {
+  margin: 0;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #1d6b3b;
+  background: #e3f6e8;
+  border: 1px solid #7ac74c;
+  border-radius: 6px;
+}
+
+.team {
+  width: 100%;
+}
+
+.team-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.member {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2px 0 4px;
+  background: #fff;
+  border: 2px solid #000;
+  border-radius: 8px;
+}
+
+.member img {
+  image-rendering: pixelated;
+}
+
+.member-name {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.empty-team {
+  margin: 0;
+  font-size: 12px;
+  color: #6b6b6b;
+}
+
 .link {
   background: none;
   border: none;
