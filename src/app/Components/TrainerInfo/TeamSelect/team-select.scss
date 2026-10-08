@@ -135,7 +135,7 @@ button {
   letter-spacing: 0.5px;
 }
 
-.primary:disabled {
+.primary.inactive {
   opacity: 0.5;
   cursor: default;
 }

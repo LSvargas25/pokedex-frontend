@@ -34,10 +34,16 @@
 
   <div class="actions">
     <button type="button" class="link" (click)="cancel()">Cancelar</button>
+    <!--
+      Sin [disabled]: el atributo se actualiza recién en la siguiente detección de cambios,
+      y un clic justo después de elegir el 3.er Pokémon caía en un botón todavía
+      deshabilitado (el navegador lo descarta). save() decide con el estado actual.
+    -->
     <button
       type="button"
       class="primary"
-      [disabled]="!canSave() || saving()"
+      [attr.aria-disabled]="!canSave() || saving()"
+      [class.inactive]="!canSave() || saving()"
       (click)="save()"
     >
       {{ saving() ? 'Guardando…' : 'Guardar equipo' }}

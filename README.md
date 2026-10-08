@@ -1,16 +1,21 @@
 # Pokédex
 
+**Live demo → [pokedex-frontend-md48.onrender.com](https://pokedex-frontend-md48.onrender.com)**
+
 [![CI](https://github.com/LSvargas25/pokedex-frontend/actions/workflows/ci.yml/badge.svg)](https://github.com/LSvargas25/pokedex-frontend/actions/workflows/ci.yml)
 
 A Pokédex you can actually hold: a two-panel, Kanto-style device built in
 Angular, with Pokémon search, trainer accounts, team building and a turn-based
 battle mode driven by skill minigames.
 
-**Live demo → [pokedex-frontend-md48.onrender.com](https://pokedex-frontend-md48.onrender.com)**
-
 > The API runs on Render's free plan and sleeps when idle. On the first visit
 > the app shows *"Despertando el servidor…"* and retries until it answers
 > (usually under a minute).
+
+![Guest flow: play as guest, pick a team of 3 and fight a battle turn](docs/screenshots/demo-guest-team-battle.gif)
+
+*Guest → team → battle: a direct link to the battle asks for a session, "Jugar como invitado"
+signs in anonymously, Trainer Info builds the team and the battle starts.*
 
 | Desktop | Tablet | Phone |
 | --- | --- | --- |
@@ -78,7 +83,7 @@ npm start
 | `npm start` | Dev server on http://localhost:4200 (talks to `http://localhost:3000`) |
 | `npm run lint` | ESLint over TypeScript and templates |
 | `npm test` / `npm run test:ci` | Jasmine + Karma (watch / headless Chrome) |
-| `npm run e2e` | Playwright: guest → team → battle against the local stack (needs the backend running; creates a guest user) |
+| `npm run e2e` | Playwright against the local stack: guest → team → battle, and the first-click save regression (needs the backend running; creates guest users) |
 | `npx ng build` | Production build into `dist/Pokefron/browser` (talks to the Render API) |
 
 ### Configuration
