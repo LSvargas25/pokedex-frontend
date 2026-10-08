@@ -83,11 +83,16 @@ export class TeamSelect implements OnInit {
       this.selected.set(current.filter((n) => n !== name));
     } else if (current.length < TEAM_SIZE) {
       this.selected.set([...current, name]);
+      if (this.canSave()) this.errorMsg.set(null);
     }
   }
 
   save(): void {
-    if (!this.canSave() || this.saving()) {
+    if (this.saving()) {
+      return;
+    }
+    if (!this.canSave()) {
+      this.errorMsg.set(`Elige ${TEAM_SIZE} Pokémon para guardar tu equipo`);
       return;
     }
     this.saving.set(true);
